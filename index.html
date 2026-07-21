@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preplify HCM — Hiring Panel Walkthrough</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark"></div>
+      <div><div class="name">Preplify</div><div class="tag">HCM</div></div>
+    </div>
+    <div class="navgroup">
+      <div class="lbl">Recruiting</div>
+      <button class="navitem hiring-highlight active" id="nav-hiring" onclick="goBatches()">Hiring</button>
+      <button class="navitem" id="nav-cvpool" onclick="goCVPool()">CV Pool</button>
+      <button class="navitem" id="nav-connections" onclick="goConnectPlatforms()">Connections</button>
+      <button class="navitem" id="nav-settings" onclick="goSettings()">Hiring Settings</button>
+    </div>
+    <div class="navgroup">
+      <div class="lbl">Main</div>
+      <div class="navitem navitem-disabled">Dashboard</div>
+      <div class="navitem navitem-disabled">Reports</div>
+    </div>
+    <div class="navgroup">
+      <div class="lbl">Employee Management</div>
+      <div class="navitem navitem-disabled">Departments</div>
+      <div class="navitem navitem-disabled">Employees</div>
+    </div>
+    <div class="navgroup">
+      <div class="lbl">Payroll Management</div>
+      <div class="navitem navitem-disabled">Salary</div>
+      <div class="navitem navitem-disabled">Tax Slabs</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb" id="crumb">Hiring</div>
+        <h1 id="pagetitle">Hiring</h1>
+        <div class="sub" id="pagesub">Hiring batches and AI-screened candidate pipelines</div>
+      </div>
+      <div class="avatar">SA</div>
+    </div>
+
+    <div class="content">
+
+      <!-- SCREEN: Batches list (the new Hiring home) -->
+      <section class="screen visible" id="screen-batches">
+        <div class="crumbnav"><span class="current">Hiring</span></div>
+        <div class="batchgrid">
+          <div class="batchcard" onclick="goBatchOpen()">
+            <div class="batchcard-top">
+              <div><div class="bc-name">Summer Internship 2026</div><div class="bc-meta">LINKEDIN · INDEED · INSTAGRAM · CLOSES IN 9 DAYS</div></div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                <span class="status-pill status-pill--brand">Stage 1 — Applications Open</span>
+                <span class="manual-chip" data-batch="open26" style="display:none;">🤝 Manual</span>
+              </div>
+            </div>
+            <div class="rolechips">
+              <span class="rolechip">Frontend Intern <b>5</b></span>
+              <span class="rolechip">Backend Intern <b>5</b></span>
+              <span class="rolechip">AI/ML Intern <b>5</b></span>
+            </div>
+            <div class="bc-progress"><div class="bc-progress-fill" style="width:22%;background:linear-gradient(90deg,var(--brand-400),var(--brand-600));"></div></div>
+            <div class="bc-foot"><span class="mono">52</span> applications so far · target <span class="mono">15</span> hires</div>
+          </div>
+
+          <div class="batchcard" onclick="goBatchInterviewing()">
+            <div class="batchcard-top">
+              <div><div class="bc-name">Customer Support Hiring — Q3 2026</div><div class="bc-meta">LINKEDIN · INDEED · APPLICATIONS CLOSED</div></div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                <span class="status-pill status-pill--on-leave">Stage 2 — Interviewing</span>
+                <span class="manual-chip" data-batch="support" style="display:none;">🤝 Manual</span>
+              </div>
+            </div>
+            <div class="rolechips">
+              <span class="rolechip">Customer Support Officer <b>3</b></span>
+              <span class="rolechip">Support Team Lead <b>1</b></span>
+            </div>
+            <div class="bc-progress"><div class="bc-progress-fill" style="width:55%;"></div></div>
+            <div class="bc-foot"><span class="mono">1</span> interview happening right now · <span class="mono">3</span> more scheduled</div>
+          </div>
+
+          <div class="batchcard" onclick="goBatchFinal()">
+            <div class="batchcard-top">
+              <div><div class="bc-name">Engineering Hiring — Q3 2026</div><div class="bc-meta">LINKEDIN · INDEED · CAREERS PAGE · APPLICATIONS CLOSED</div></div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                <span class="status-pill status-pill--probation">Stage 3 — Final Review</span>
+                <span class="manual-chip" data-batch="eng" style="display:none;">🤝 Manual</span>
+              </div>
+            </div>
+            <div class="rolechips">
+              <span class="rolechip">Senior React Developer <b>3</b></span>
+              <span class="rolechip">Backend Engineer <b>2</b></span>
+            </div>
+            <div class="bc-progress"><div class="bc-progress-fill" style="width:80%;"></div></div>
+            <div class="bc-foot"><span class="mono">8</span> candidates ready for your review · target <span class="mono">5</span> hires</div>
+          </div>
+
+          <div class="batchcard" onclick="goBatchClosed()">
+            <div class="batchcard-top">
+              <div><div class="bc-name">Summer Internship 2025</div><div class="bc-meta">LINKEDIN · INDEED · CLOSED 11 MONTHS AGO</div></div>
+              <span class="status-pill status-pill--active">Closed</span>
+            </div>
+            <div class="rolechips">
+              <span class="rolechip">Frontend Intern <b>5/5</b></span>
+              <span class="rolechip">Backend Intern <b>5/5</b></span>
+              <span class="rolechip">AI/ML Intern <b>5/5</b></span>
+            </div>
+            <div class="bc-progress"><div class="bc-progress-fill" style="width:100%;background:linear-gradient(90deg,var(--success-fg),var(--success-fg));"></div></div>
+            <div class="bc-foot"><span class="mono">15/15</span> positions filled</div>
+          </div>
+
+          <div class="batchcard batchcard-create" onclick="goCreateBatch()">
+            <div class="bc-create-icon">+</div>
+            <div class="bc-create-label">Create new hiring batch</div>
+            <div class="bc-create-sub">One batch, multiple roles, one shared timeline</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Create batch -->
+      <section class="screen" id="screen-create-batch">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Create batch</span></div>
+        <div class="hcm-card" style="padding:22px 26px;">
+          <div class="settings-row">
+            <div><div class="st">Batch name</div><div class="sd">What HR and candidates both see, e.g. "Summer Internship 2027."</div></div>
+            <input class="searchbox" id="newBatchNameInput" style="max-width:340px;" type="text" placeholder="e.g. Winter Graduate Program 2027">
+          </div>
+          <div class="settings-row" style="grid-template-columns:220px 1fr;">
+            <div><div class="st">Application window</div><div class="sd">When the form opens and closes — click a start day, then an end day, Calendly-style.</div></div>
+            <div class="hcm-card calbox">
+              <div>
+                <div class="cal-head"><div class="m">September 2026</div><div class="cal-nav"><button>‹</button><button>›</button></div></div>
+                <div class="cal-grid" id="batchCalGrid">
+                  <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                  <div class="cal-day muted"></div><div class="cal-day muted"></div>
+                  <div class="cal-day pickable" data-day="1" onclick="pickBatchDate(this)">1</div>
+                  <div class="cal-day pickable" data-day="2" onclick="pickBatchDate(this)">2</div>
+                  <div class="cal-day pickable" data-day="3" onclick="pickBatchDate(this)">3</div>
+                  <div class="cal-day pickable" data-day="4" onclick="pickBatchDate(this)">4</div>
+                  <div class="cal-day pickable" data-day="5" onclick="pickBatchDate(this)">5</div>
+                  <div class="cal-day pickable" data-day="6" onclick="pickBatchDate(this)">6</div>
+                  <div class="cal-day pickable" data-day="7" onclick="pickBatchDate(this)">7</div>
+                  <div class="cal-day pickable" data-day="8" onclick="pickBatchDate(this)">8</div>
+                  <div class="cal-day pickable" data-day="9" onclick="pickBatchDate(this)">9</div>
+                  <div class="cal-day pickable" data-day="10" onclick="pickBatchDate(this)">10</div>
+                  <div class="cal-day pickable" data-day="11" onclick="pickBatchDate(this)">11</div>
+                  <div class="cal-day pickable" data-day="12" onclick="pickBatchDate(this)">12</div>
+                  <div class="cal-day pickable" data-day="13" onclick="pickBatchDate(this)">13</div>
+                  <div class="cal-day pickable" data-day="14" onclick="pickBatchDate(this)">14</div>
+                  <div class="cal-day pickable" data-day="15" onclick="pickBatchDate(this)">15</div>
+                  <div class="cal-day pickable" data-day="16" onclick="pickBatchDate(this)">16</div>
+                  <div class="cal-day pickable" data-day="17" onclick="pickBatchDate(this)">17</div>
+                  <div class="cal-day pickable" data-day="18" onclick="pickBatchDate(this)">18</div>
+                  <div class="cal-day pickable" data-day="19" onclick="pickBatchDate(this)">19</div>
+                  <div class="cal-day pickable" data-day="20" onclick="pickBatchDate(this)">20</div>
+                  <div class="cal-day pickable" data-day="21" onclick="pickBatchDate(this)">21</div>
+                  <div class="cal-day pickable" data-day="22" onclick="pickBatchDate(this)">22</div>
+                  <div class="cal-day pickable" data-day="23" onclick="pickBatchDate(this)">23</div>
+                  <div class="cal-day pickable" data-day="24" onclick="pickBatchDate(this)">24</div>
+                  <div class="cal-day pickable" data-day="25" onclick="pickBatchDate(this)">25</div>
+                  <div class="cal-day pickable" data-day="26" onclick="pickBatchDate(this)">26</div>
+                  <div class="cal-day pickable" data-day="27" onclick="pickBatchDate(this)">27</div>
+                  <div class="cal-day pickable" data-day="28" onclick="pickBatchDate(this)">28</div>
+                  <div class="cal-day pickable" data-day="29" onclick="pickBatchDate(this)">29</div>
+                  <div class="cal-day pickable" data-day="30" onclick="pickBatchDate(this)">30</div>
+                  <div class="cal-day muted"></div><div class="cal-day muted"></div><div class="cal-day muted"></div>
+                </div>
+              </div>
+              <div>
+                <div class="range-picks">
+                  <div class="range-pick" id="rpOpensBox"><div class="rp-label">Opens</div><div class="rp-val" id="rpOpens">Pick a date</div></div>
+                  <div class="range-pick" id="rpClosesBox"><div class="rp-label">Closes</div><div class="rp-val" id="rpCloses">Pick a date</div></div>
+                </div>
+                <div class="cal-range-note" id="batchRangeNote">Click a day to set when applications open, then click another to set when they close.</div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div><div class="st">Where it's posted</div><div class="sd">Job boards post automatically based on what's connected. <button class="viewlink" onclick="goConnectPlatforms()">Manage connections →</button></div></div>
+            <div>
+              <div class="wp-list" id="wherePostedList"></div>
+              <div class="radiorow" style="margin-top:10px;">
+                <label><input type="checkbox"> Company careers page</label>
+                <label><input type="checkbox"> Instagram / Facebook</label>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row" style="grid-template-columns:220px 1fr;">
+            <div><div class="st">Batch banner</div><div class="sd">Optional — one image, reused as the preview everywhere this batch gets posted or shared.</div></div>
+            <div>
+              <div class="banner-drop" onclick="document.getElementById('bannerFileInput').click();">
+                <div class="banner-frame" id="bannerFrame"><span class="banner-frame-label" id="bannerFrameLabel">1200 × 630</span></div>
+                <div class="banner-drop-text" id="bannerDropText"><b>Click to upload</b> or drag a JPG/PNG here</div>
+              </div>
+              <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleBannerUpload(event)">
+              <ul class="banner-tips">
+                <li><b>1200 × 630px</b> (a 1.91:1 ratio) — the one size that renders cleanly as the link preview on LinkedIn, Facebook, Indeed, and virtually every other platform, no separate crop needed per platform.</li>
+                <li>Keep the role title, company name, and any logo inside the center <b>1080 × 600</b> safe zone — some platforms crop the outer edge on narrower screens.</li>
+                <li><b>JPG or PNG</b>, ideally under 1MB (8MB hard limit) — oversized files load slowly or get rejected outright by some boards.</li>
+                <li>Avoid small text — this image usually renders at thumbnail size in a feed before anyone clicks through.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="settings-row" style="align-items:center;">
+            <div><div class="st">Roles in this batch</div><div class="sd">Each role gets its own scoring criteria and shortlist, under one shared batch.</div></div>
+            <div style="width:100%;">
+              <div class="rolerow-block">
+                <div class="rolerow"><input class="searchbox" type="text" value="Frontend Intern"><input class="threshold-input mono" type="text" value="5"><span style="font-size:12px;color:var(--ink-faint);">positions</span><button class="viewlink" style="color:var(--danger-fg);" onclick="this.closest('.rolerow-block').remove(); updateBatchTotal();">Remove</button></div>
+                <label class="rolerow-jd-label">Job description — what the AI will score applications against</label>
+                <textarea class="jd-textarea" style="min-height:110px;">Summer internship for a Frontend-track student or recent grad. You'll work alongside our product engineering team building real features in our React codebase.
+
+Requirements:
+- Currently pursuing or recently completed a CS degree (or equivalent self-taught background)
+- Basic HTML/CSS/JavaScript fluency
+- Some exposure to React (coursework, personal projects, or bootcamp) preferred but not required
+- Eagerness to learn — this is an entry-level program</textarea>
+              </div>
+              <div class="rolerow-block">
+                <div class="rolerow"><input class="searchbox" type="text" value="Backend Intern"><input class="threshold-input mono" type="text" value="5"><span style="font-size:12px;color:var(--ink-faint);">positions</span><button class="viewlink" style="color:var(--danger-fg);" onclick="this.closest('.rolerow-block').remove(); updateBatchTotal();">Remove</button></div>
+                <label class="rolerow-jd-label">Job description — what the AI will score applications against</label>
+                <textarea class="jd-textarea" style="min-height:110px;">Summer internship for a Backend-track student. You'll work with our engineering team on API and database work for our core product.
+
+Requirements:
+- Currently pursuing or recently completed a CS degree
+- Basic understanding of at least one backend language/framework (Node.js, Django, etc.) and SQL
+- Personal or coursework projects demonstrating backend logic preferred</textarea>
+              </div>
+              <div class="rolerow-block">
+                <div class="rolerow"><input class="searchbox" type="text" value="AI/ML Intern"><input class="threshold-input mono" type="text" value="5"><span style="font-size:12px;color:var(--ink-faint);">positions</span><button class="viewlink" style="color:var(--danger-fg);" onclick="this.closest('.rolerow-block').remove(); updateBatchTotal();">Remove</button></div>
+                <label class="rolerow-jd-label">Job description — what the AI will score applications against</label>
+                <textarea class="jd-textarea" style="min-height:110px;">Summer internship for a Machine Learning-track student. You'll support our data team on model experimentation and evaluation work.
+
+Requirements:
+- Currently pursuing or recently completed a CS/Data Science degree
+- Coursework or personal projects in Python, pandas, and at least one ML library (scikit-learn, PyTorch, etc.)
+- Hands-on project work (even small ones) valued over certificates alone</textarea>
+              </div>
+              <button class="linkbtn" onclick="addRoleRow()">+ Add another role</button>
+              <div class="batchtotal">Total target: <b class="mono" id="totalPositions">15</b> hires across <b class="mono" id="totalRoles">3</b> roles</div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div><div class="st">Application form</div><div class="sd">What candidates fill in, plus any instructions you want them to see first — like Google Forms, but wired straight into screening.</div></div>
+            <button class="btn btn-line" onclick="goFormBuilder()">Customize the application form →</button>
+          </div>
+          <div class="settings-row">
+            <div><div class="st">Also check the CV Pool first?</div><div class="sd">Before this posts publicly, run these roles against everyone who's applied before.</div></div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-soft);"><input type="checkbox" checked> Yes — surface strong matches from the CV Pool before publishing</label>
+          </div>
+          <div class="savebar">
+            <button class="btn btn-ghost" onclick="goBatches()">Cancel</button>
+            <button class="btn btn-primary" onclick="publishBatch()">Publish batch →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Batch detail — a freshly-published custom batch (data-driven, manual mode by default) -->
+      <section class="screen" id="screen-batch-custom">
+        <div class="crumbnav" id="customBatchCrumb"></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('custom')">⚙ Settings for this batch</button></div>
+
+        <div class="timeline" id="customBatchTimeline"></div>
+        <div class="infogrid" id="customBatchInfo"></div>
+
+        <div class="mode-banner off">🤝 <b>This batch started in manual mode.</b> Every applicant below is waiting on you — nothing is auto-scored or auto-shortlisted. Click into a role to start reviewing candidates one by one.</div>
+
+        <div class="hcm-card panel">
+          <div class="panel-head-row">
+            <h3>Profile building</h3>
+            <button class="btn btn-primary" id="buildAllBtn" onclick="buildAllProfiles()">🗂 Build all profiles →</button>
+          </div>
+          <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:12px;">Scan every applicant's résumé into a standard profile as its own step, before you start reviewing role by role.</div>
+          <div class="bc-progress"><div class="bc-progress-fill" id="profileBuildFill" style="width:0%;"></div></div>
+          <div class="mono" id="profileBuildStatus" style="font-size:12px;color:var(--ink-soft);margin-top:8px;">0 of 0 profiles built</div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Roles in this batch <span style="font-weight:400;color:var(--ink-faint);font-size:12px;text-transform:none;letter-spacing:0;">— click a role to review its applicants</span></h3>
+          <div id="customBatchRoles"></div>
+          <div class="stage-cta" data-batch="custom">
+            <div><div class="t">🤖 Let AI screen these applications</div><div class="s">Scores every applicant against each role's job description — just for this stage.</div></div>
+            <button class="btn btn-primary" onclick="aiCompleteStage('custom','application screening')">Let AI complete this stage →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: custom batch — one role's applicant list (manual review) -->
+      <section class="screen" id="screen-batch-custom-applicants">
+        <div class="crumbnav" id="customRoleCrumb"></div>
+        <div class="applicant-count" id="customRoleCount"></div>
+        <div class="hcm-card" style="padding:0;">
+          <div class="wrap-x">
+          <table class="apptable">
+            <tr><th>Applicant</th><th>City</th><th>Status</th><th></th></tr>
+            <tbody id="customRoleRows"></tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: custom batch — manual candidate review profile (no AI score, HR decides) -->
+      <section class="screen" id="screen-batch-custom-profile">
+        <div class="crumbnav" id="customProfileCrumb"></div>
+
+        <div class="toast" id="customProfileToast">
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div id="customProfileToastMsg"></div>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-id">
+            <div class="initials" id="customProfileInitials"></div>
+            <div><h2 id="customProfileName"></h2><div class="role" id="customProfileRoleLine"></div></div>
+          </div>
+          <span id="customProfileStatusPill"></span>
+        </div>
+
+        <div class="hcm-card panel">
+          <div class="panel-head-row">
+            <h3>Résumé excerpt</h3>
+            <button class="viewlink" id="viewOriginalCvBtn" onclick="toggleOriginalCv()" style="display:none;">📎 View original CV</button>
+          </div>
+          <p id="customProfileResume" style="font-size:13.5px;color:var(--ink-soft);margin:0;"></p>
+          <pre class="cv-raw" id="originalCvBox" style="display:none;"></pre>
+        </div>
+
+        <div class="hcm-card panel">
+          <div class="panel-head-row">
+            <h3>Standard candidate profile</h3>
+            <button class="btn btn-line" id="scanCvBtn" onclick="scanCandidateCv()">📄 Scan CV → Build profile</button>
+          </div>
+          <div id="cvProfileBody"></div>
+        </div>
+
+        <div class="actionbar" id="customProfileActions"></div>
+      </section>
+
+      <!-- SCREEN: Batch detail — CLOSED (Summer Internship 2025) -->
+      <section class="screen" id="screen-batch-closed">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Summer Internship 2025</span></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('closed25')">⚙ Settings for this batch</button></div>
+
+        <div class="timeline">
+          <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Applications<br>Open</div><div class="tl-date">Jun 1 – Jun 21, 2025</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step done clickable" onclick="alert('Would show the historical interview schedule for this batch — same interface as Engineering Hiring\'s, all 47 interviews marked Completed.')"><div class="tl-dot">✓</div><div class="tl-label">Interviewing</div><div class="tl-date">Jun 22 – Jul 5, 2025</div><div class="tl-hint">View schedule →</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Final Review</div><div class="tl-date">Jul 6 – Jul 14, 2025</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step done active"><div class="tl-dot">✓</div><div class="tl-label">Closed</div><div class="tl-date">Jul 15, 2025</div></div>
+        </div>
+
+        <div class="infogrid">
+          <div class="infoitem"><div class="il">Hiring manager</div><div class="iv">Sara Ahmed</div></div>
+          <div class="infoitem"><div class="il">Department</div><div class="iv">Engineering &amp; Product</div></div>
+          <div class="infoitem"><div class="il">Total applicants</div><div class="iv mono">147</div></div>
+          <div class="infoitem"><div class="il">Created</div><div class="iv mono">May 28, 2025</div></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Results</h3>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">Frontend Intern</span><span class="mono" style="color:var(--success-fg);font-weight:700;">5 / 5 hired</span></div>
+            <div class="rc-names">Zara Hassan · Ahmed Raza · Komal Sheikh · Bilal Nasir · Rida Farooq</div>
+          </div>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">Backend Intern</span><span class="mono" style="color:var(--success-fg);font-weight:700;">5 / 5 hired</span></div>
+            <div class="rc-names">Hamza Tariq · Sadia Khan · Usama Malik · Areeba Noor · Talha Yousaf</div>
+          </div>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">AI/ML Intern</span><span class="mono" style="color:var(--success-fg);font-weight:700;">5 / 5 hired</span></div>
+            <div class="rc-names">Fatima Zahra · Junaid Iqbal · Mahnoor Ali · Saad Rehman · Hina Abbas</div>
+          </div>
+        </div>
+        <div class="callout-note-box">This batch's 132 non-hired applicants — including strong candidates who just didn't fit a role at the time — are preserved in the <button class="viewlink" onclick="goCVPool()">CV Pool →</button>, not deleted.</div>
+      </section>
+
+      <!-- SCREEN: Batch detail — FINAL REVIEW (Engineering Hiring Q3 2026) -->
+      <section class="screen" id="screen-batch-final">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Engineering Hiring — Q3 2026</span><span class="manual-chip" data-batch="eng" style="display:none;margin-left:8px;">🤝 Manual mode</span></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('eng')">⚙ Settings for this batch</button></div>
+
+        <div class="timeline">
+          <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Applications<br>Open</div><div class="tl-date">Jun 8 – Jun 22, 2026</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step done clickable" onclick="goInterviewSchedule('eng')"><div class="tl-dot">✓</div><div class="tl-label">Interviewing</div><div class="tl-date">Jun 23 – Jul 8, 2026</div><div class="tl-hint">View schedule →</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step active"><div class="tl-dot">3</div><div class="tl-label">Final Review</div><div class="tl-date">Started Jul 9, 2026</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step"><div class="tl-dot">4</div><div class="tl-label">Closed</div><div class="tl-date">Not yet</div></div>
+        </div>
+
+        <div class="infogrid">
+          <div class="infoitem"><div class="il">Hiring manager</div><div class="iv">Sara Ahmed</div></div>
+          <div class="infoitem"><div class="il">Department</div><div class="iv">Engineering</div></div>
+          <div class="infoitem"><div class="il">Total applicants</div><div class="iv mono">165</div></div>
+          <div class="infoitem"><div class="il">Application form</div><div class="iv"><span class="copylink">preplify.app/apply/eng-q3-26 <button class="viewlink" onclick="alert('Copied.')">Copy</button></span></div></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Roles in this batch</h3>
+          <div class="rolecard rolecard-click" onclick="goPipeline()">
+            <div class="rc-head"><span class="rc-name">Senior React Developer <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 3 positions</span></span><span class="status-pill status-pill--probation">5 ready for review</span></div>
+            <div class="mini-funnel" style="margin-top:6px;"><b class="mono">120</b> applied <span class="arrow">→</span> <b class="mono">39</b> shortlisted <span class="arrow">→</span> <b class="mono">28</b> interviewed <span class="arrow">→</span> <b class="mono" style="color:var(--success-fg);">5</b> forwarded</div>
+          </div>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">Backend Engineer <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 2 positions</span></span><span class="status-pill status-pill--probation">3 ready for review</span></div>
+            <div class="mini-funnel" style="margin-top:6px;"><b class="mono">45</b> applied <span class="arrow">→</span> <b class="mono">18</b> shortlisted <span class="arrow">→</span> <b class="mono">12</b> interviewed <span class="arrow">→</span> <b class="mono" style="color:var(--success-fg);">3</b> forwarded</div>
+            <div style="margin-top:10px;"><button class="viewlink" onclick="alert('Would open the Backend Engineer shortlist — same review interface as Senior React Developer, showing 3 forwarded candidates.')">Review shortlist →</button></div>
+            <div class="jd-inline">
+              <button class="jd-inline-toggle" onclick="toggleJdDisclosure('backendeng')">📄 View / edit job description</button>
+              <div class="jd-inline-body" id="jdBody-backendeng" style="display:none;">
+                <div class="jd-head">
+                  <div></div>
+                  <button class="btn btn-line" id="jdEditBtn-backendeng" onclick="toggleJdEdit('backendeng')">Edit →</button>
+                </div>
+                <div class="jd-view" id="jdView-backendeng">Backend Engineer to build and maintain our Node.js/PostgreSQL services powering the core product.
+
+Requirements:
+- 3+ years backend development experience
+- Strong Node.js and SQL database experience
+- REST API design experience
+- Docker/containerization familiarity a plus</div>
+                <div class="jd-edit-area" id="jdEditArea-backendeng" style="display:none;">
+                  <textarea class="jd-textarea" id="jdTextarea-backendeng"></textarea>
+                  <div class="jd-actions">
+                    <button class="btn btn-ghost" onclick="cancelJdEdit('backendeng')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveJd('backendeng')">Save job description →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stage-cta" data-batch="eng">
+            <div><div class="t">🤖 Let AI rank and shortlist the remaining candidates</div><div class="s">Reviews every completed interview and forwards a ranked shortlist — just for this stage.</div></div>
+            <button class="btn btn-primary" onclick="aiCompleteStage('eng','final review')">Let AI complete this stage →</button>
+          </div>
+        </div>
+        <div class="secondary-actions">
+          <button class="linkbtn" onclick="goInterviewSchedule('eng')">🗓 View the full interview schedule for this batch</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Batch detail — INTERVIEWING (Customer Support Hiring, Stage 2) -->
+      <section class="screen" id="screen-batch-interviewing">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Customer Support Hiring — Q3 2026</span><span class="manual-chip" data-batch="support" style="display:none;margin-left:8px;">🤝 Manual mode</span></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('support')">⚙ Settings for this batch</button></div>
+
+        <div class="timeline">
+          <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Applications<br>Open</div><div class="tl-date">Jun 20 – Jul 3, 2026</div></div>
+          <div class="tl-line done"></div>
+          <div class="tl-step active clickable" onclick="goInterviewSchedule('support')"><div class="tl-dot">2</div><div class="tl-label">Interviewing</div><div class="tl-date">Started Jul 4, 2026</div><div class="tl-hint">View schedule →</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step"><div class="tl-dot">3</div><div class="tl-label">Final Review</div><div class="tl-date">Not yet</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step"><div class="tl-dot">4</div><div class="tl-label">Closed</div><div class="tl-date">Not yet</div></div>
+        </div>
+
+        <div class="infogrid">
+          <div class="infoitem"><div class="il">Hiring manager</div><div class="iv">Sara Ahmed</div></div>
+          <div class="infoitem"><div class="il">Department</div><div class="iv">Customer Support</div></div>
+          <div class="infoitem"><div class="il">Total applicants</div><div class="iv mono">54</div></div>
+          <div class="infoitem"><div class="il">Application form</div><div class="iv"><span class="copylink">preplify.app/apply/support-q3-26 <button class="viewlink" onclick="alert('Copied.')">Copy</button></span></div></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Roles in this batch</h3>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">Customer Support Officer <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 3 positions</span></span><span class="mono" style="color:var(--ink-soft);">22 shortlisted, interviewing now</span></div>
+            <div class="jd-inline">
+              <button class="jd-inline-toggle" onclick="toggleJdDisclosure('cso')">📄 View / edit job description</button>
+              <div class="jd-inline-body" id="jdBody-cso" style="display:none;">
+                <div class="jd-head">
+                  <div></div>
+                  <button class="btn btn-line" id="jdEditBtn-cso" onclick="toggleJdEdit('cso')">Edit →</button>
+                </div>
+                <div class="jd-view" id="jdView-cso">Customer Support Officer to handle inbound customer inquiries via chat, email, and phone.
+
+Requirements:
+- 1+ years in a customer-facing role (support, retail, hospitality all count)
+- Clear written and verbal communication
+- Comfortable de-escalating frustrated customers
+- Basic computer literacy (CRM tools, ticketing systems)</div>
+                <div class="jd-edit-area" id="jdEditArea-cso" style="display:none;">
+                  <textarea class="jd-textarea" id="jdTextarea-cso"></textarea>
+                  <div class="jd-actions">
+                    <button class="btn btn-ghost" onclick="cancelJdEdit('cso')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveJd('cso')">Save job description →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rolecard">
+            <div class="rc-head"><span class="rc-name">Support Team Lead <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 1 position</span></span><span class="mono" style="color:var(--ink-soft);">6 shortlisted, interviewing now</span></div>
+            <div class="jd-inline">
+              <button class="jd-inline-toggle" onclick="toggleJdDisclosure('stl')">📄 View / edit job description</button>
+              <div class="jd-inline-body" id="jdBody-stl" style="display:none;">
+                <div class="jd-head">
+                  <div></div>
+                  <button class="btn btn-line" id="jdEditBtn-stl" onclick="toggleJdEdit('stl')">Edit →</button>
+                </div>
+                <div class="jd-view" id="jdView-stl">Support Team Lead to manage a team of 4-5 Customer Support Officers and own escalation handling.
+
+Requirements:
+- 2+ years in customer support, including some team-lead or mentorship experience
+- Track record of improving support metrics (CSAT, response time, etc.)
+- Comfortable giving feedback and coaching junior team members</div>
+                <div class="jd-edit-area" id="jdEditArea-stl" style="display:none;">
+                  <textarea class="jd-textarea" id="jdTextarea-stl"></textarea>
+                  <div class="jd-actions">
+                    <button class="btn btn-ghost" onclick="cancelJdEdit('stl')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveJd('stl')">Save job description →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stage-cta" data-batch="support">
+            <div><div class="t">🤖 Let AI conduct the remaining interviews</div><div class="s">Takes over scheduling and running the AI VC Interface for everyone still waiting — just for this stage.</div></div>
+            <button class="btn btn-primary" onclick="aiCompleteStage('support','interviewing')">Let AI complete this stage →</button>
+          </div>
+        </div>
+
+        <div class="hcm-card" style="padding:20px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+          <div>
+            <div style="font-weight:600; font-size:15px; margin-bottom:4px; display:flex; align-items:center; gap:10px;">One interview is happening right now <span class="livebadge"><span class="dotpulse"></span>Live</span></div>
+            <div style="font-size:13px; color:var(--ink-soft);">Watch it happen, or step in directly if something needs a human.</div>
+          </div>
+          <button class="btn btn-primary" onclick="goInterviewSchedule('support')">View interview schedule →</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Interview schedule (data-driven per batch) -->
+      <section class="screen" id="screen-interview-schedule">
+        <div class="crumbnav" id="scheduleCrumb"></div>
+
+        <div class="hcm-card" style="padding:0;">
+          <div class="wrap-x">
+          <table class="apptable">
+            <tr><th>Candidate</th><th>Role</th><th>Date &amp; time</th><th>Status</th><th></th></tr>
+            <tbody id="scheduleRows"></tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Live interview monitor + intervene -->
+      <section class="screen" id="screen-live-monitor">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchInterviewing()">Customer Support Hiring — Q3 2026</button><span>/</span><button onclick="goInterviewSchedule('support')">Interview schedule</button><span>/</span><span>Rabia Sultan — live</span></div>
+
+        <div class="monitor-header">
+          <div class="detail-id">
+            <div class="initials">RS</div>
+            <div><h2 style="font-size:18px;">Rabia Sultan</h2><div class="role">Customer Support Officer · rescheduled after an earlier no-show</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px;">
+            <span class="livebadge"><span class="dotpulse"></span>Live</span>
+            <span class="monitor-elapsed">8:47 elapsed</span>
+          </div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Live transcript</h3>
+          <div class="transcript" style="max-height:280px;">
+            <div class="bubble ai"><div class="who">AI interviewer</div>Tell me about a time a customer was upset about something that genuinely wasn't your fault. How did you handle it?</div>
+            <div class="bubble cand"><div class="who">Rabia Sultan</div>A customer's order was delayed by the courier, not us, but she was furious on the call. I didn't argue about whose fault it was — I just acknowledged she was frustrated, gave her a real update on where the package was, and offered a small credit for the trouble.</div>
+            <div class="bubble ai"><div class="who">AI interviewer</div>Did offering the credit feel like admitting fault?</div>
+            <div class="bubble cand"><div class="who">Rabia Sultan</div>Not really — I framed it as "I know this isn't the experience we want for you," not "sorry it's our fault." She calmed down once she felt heard, honestly more than because of the credit itself.</div>
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+
+        <div class="intervene-panel">
+          <div class="t">Intervene</div>
+          <p class="s">The candidate won't see anything you send here except a natural follow-up from the AI — this doesn't interrupt the conversation.</p>
+          <div class="intervene-input-row">
+            <input class="searchbox" type="text" placeholder="e.g. &quot;Ask her how she'd handle an angry customer escalating over email instead of a call&quot;">
+            <button class="btn btn-line" onclick="alert('Would send this guidance to the AI interviewer — it will work the topic into its next question.')">Send guidance</button>
+          </div>
+          <div class="takeover-row">
+            <p class="s">If something's actually wrong — the AI misunderstands a critical answer, or the conversation needs a human right now — you can take over directly.</p>
+            <button class="btn btn-danger-ghost" onclick="alert('Would connect you directly into the live conversation, pausing the AI interviewer. Rabia would see a message that a hiring manager has joined.')">Take over interview</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Batch detail — OPEN / STAGE 1 (Summer Internship 2026) -->
+      <section class="screen" id="screen-batch-open">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Summer Internship 2026</span><span class="manual-chip" data-batch="open26" style="display:none;margin-left:8px;">🤝 Manual mode</span></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('open26')">⚙ Settings for this batch</button></div>
+
+        <div class="timeline">
+          <div class="tl-step active"><div class="tl-dot">1</div><div class="tl-label">Applications<br>Open</div><div class="tl-date">Jul 1 – Jul 18, 2026</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step clickable" onclick="alert('Not available yet — interviews will be scheduled once applications close on Jul 18, 2026.')"><div class="tl-dot">2</div><div class="tl-label">Interviewing</div><div class="tl-date">From Jul 19, 2026</div><div class="tl-hint">Opens in 9 days</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step"><div class="tl-dot">3</div><div class="tl-label">Final Review</div><div class="tl-date">Est. Jul 30</div></div>
+          <div class="tl-line"></div>
+          <div class="tl-step"><div class="tl-dot">4</div><div class="tl-label">Closed</div><div class="tl-date">Est. Aug 5</div></div>
+        </div>
+
+        <div class="infogrid">
+          <div class="infoitem"><div class="il">Hiring manager</div><div class="iv">Sara Ahmed</div></div>
+          <div class="infoitem"><div class="il">Department</div><div class="iv">Multiple</div></div>
+          <div class="infoitem"><div class="il">Applicants so far</div><div class="iv mono">52</div></div>
+          <div class="infoitem"><div class="il">Application form</div><div class="iv"><span class="copylink">preplify.app/apply/summer-26 <button class="viewlink" onclick="alert('Copied.')">Copy</button></span></div></div>
+        </div>
+
+        <div class="callout-note-box">Applications close in <b>9 days</b>. Posted to LinkedIn, Indeed, Instagram, and the company careers page — candidates apply directly through the public application form.<br><button class="viewlink" onclick="goApplyForm()">Preview the public application form →</button> · <button class="viewlink" onclick="goFormBuilder()">Edit questions →</button></div>
+
+        <div class="hcm-card panel">
+          <h3>Live scoring, per role <span style="font-weight:400;color:var(--ink-faint);font-size:12px;text-transform:none;letter-spacing:0;">— click a role to see its candidates</span></h3>
+          <div class="rolecard rolecard-click" onclick="goRoleApplicants('frontend')">
+            <div class="rc-head"><span class="rc-name">Frontend Intern <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 5 positions</span></span><span class="mono" style="color:var(--ink-soft);">24 applied</span></div>
+            <div class="scoresplit">
+              <div class="ss-seg" style="width:67%;background:var(--success-fg);" title="Shortlisted"></div>
+              <div class="ss-seg" style="width:25%;background:var(--danger-fg);" title="Rejected"></div>
+              <div class="ss-seg" style="width:8%;background:var(--warning-fg);" title="Human intervention needed"></div>
+            </div>
+            <div class="ss-legend"><span><i style="background:var(--success-fg);"></i>16 shortlisted</span><span><i style="background:var(--danger-fg);"></i>6 rejected</span><span><i style="background:var(--warning-fg);"></i>2 human intervention needed</span></div>
+          </div>
+          <div class="rolecard rolecard-click" onclick="goRoleApplicants('backend')">
+            <div class="rc-head"><span class="rc-name">Backend Intern <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 5 positions</span></span><span class="mono" style="color:var(--ink-soft);">19 applied</span></div>
+            <div class="scoresplit">
+              <div class="ss-seg" style="width:58%;background:var(--success-fg);"></div>
+              <div class="ss-seg" style="width:32%;background:var(--danger-fg);"></div>
+              <div class="ss-seg" style="width:10%;background:var(--warning-fg);"></div>
+            </div>
+            <div class="ss-legend"><span><i style="background:var(--success-fg);"></i>11 shortlisted</span><span><i style="background:var(--danger-fg);"></i>6 rejected</span><span><i style="background:var(--warning-fg);"></i>2 human intervention needed</span></div>
+          </div>
+          <div class="rolecard rolecard-click" onclick="goRoleApplicants('aiml')">
+            <div class="rc-head"><span class="rc-name">AI/ML Intern <span class="mono" style="color:var(--ink-faint);font-weight:400;">· 5 positions</span></span><span class="mono" style="color:var(--ink-soft);">9 applied</span></div>
+            <div class="scoresplit">
+              <div class="ss-seg" style="width:56%;background:var(--success-fg);"></div>
+              <div class="ss-seg" style="width:33%;background:var(--danger-fg);"></div>
+              <div class="ss-seg" style="width:11%;background:var(--warning-fg);"></div>
+            </div>
+            <div class="ss-legend"><span><i style="background:var(--success-fg);"></i>5 shortlisted</span><span><i style="background:var(--danger-fg);"></i>3 rejected</span><span><i style="background:var(--warning-fg);"></i>1 human intervention needed</span></div>
+          </div>
+          <div class="stage-cta" data-batch="open26">
+            <div><div class="t">🤖 Let AI screen the rest of these applications</div><div class="s">Scores every remaining CV against each role's job description — just for this stage.</div></div>
+            <button class="btn btn-primary" onclick="aiCompleteStage('open26','application screening')">Let AI complete this stage →</button>
+          </div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Most recent applications</h3>
+          <table class="apptable">
+            <tr><th>Applicant</th><th>Applied for</th><th>Score</th><th>Status</th><th></th></tr>
+            <tr class="rowhover" onclick="openStage1Profile('hira')"><td class="namecell">Hira Sultan</td><td class="rolecell">Frontend Intern</td><td class="score mono" style="color:var(--success-fg);">84</td><td><span class="status-pill status-pill--active">Shortlisted</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openStage1Profile('abdullah')"><td class="namecell">Abdullah Nasir</td><td class="rolecell">AI/ML Intern</td><td class="score mono" style="color:var(--warning-fg);">63</td><td><span class="status-pill status-pill--brand">Human intervention needed</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openStage1Profile('mariam')"><td class="namecell">Mariam Yousaf</td><td class="rolecell">Backend Intern</td><td class="score mono" style="color:var(--success-fg);">79</td><td><span class="status-pill status-pill--active">Shortlisted</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openStage1Profile('owais')"><td class="namecell">Owais Khalid</td><td class="rolecell">Frontend Intern</td><td class="score mono" style="color:var(--danger-fg);">32</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- SCREEN: Role applicants list (Stage 1, populated by JS per role) -->
+      <section class="screen" id="screen-role-applicants">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchOpen()">Summer Internship 2026</button><span>/</span><span id="roleAppCrumb">Role</span></div>
+
+        <div class="hcm-card panel jd-panel">
+          <div class="jd-head">
+            <h3>Job description<span class="jd-sub">What the AI scores every application against — edit it here, right where you review this role</span></h3>
+            <button class="btn btn-line" id="jdEditBtn-roleapp" onclick="toggleJdEdit('roleapp')">Edit →</button>
+          </div>
+          <div class="jd-view" id="jdView-roleapp"></div>
+          <div class="jd-edit-area" id="jdEditArea-roleapp" style="display:none;">
+            <textarea class="jd-textarea" id="jdTextarea-roleapp"></textarea>
+            <div class="jd-actions">
+              <button class="btn btn-ghost" onclick="cancelJdEdit('roleapp')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveJd('roleapp')">Save job description →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="applicant-count" id="roleAppCount"></div>
+        <div class="hcm-card" style="padding:0;">
+          <div class="wrap-x">
+          <table class="apptable">
+            <tr><th>Applicant</th><th>Score</th><th>Status</th><th></th></tr>
+            <tbody id="roleAppRows"></tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Stage 1 candidate profile (resume screening, populated by JS) -->
+      <section class="screen" id="screen-stage1-profile">
+        <div class="crumbnav" id="stage1Crumb"></div>
+
+        <div class="toast" id="stage1Toast">
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div id="stage1ToastMsg"></div>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-id">
+            <div class="initials" id="stage1Initials"></div>
+            <div><h2 id="stage1Name"></h2><div class="role" id="stage1RoleLine"></div></div>
+          </div>
+          <div class="scorebox" id="stage1ScoreBox"><div class="n mono" id="stage1Score"></div><div class="l" id="stage1ScoreLabel">Screening score</div></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Screening score breakdown</h3>
+          <div id="stage1Breakdown"></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Résumé excerpt</h3>
+          <p style="font-size:13.5px;color:var(--ink-soft);margin:0;" id="stage1Resume"></p>
+          <div class="chiprow" id="stage1Chips" style="margin-top:12px;"></div>
+        </div>
+
+        <div id="stage1ExtraNote"></div>
+
+        <div class="actionbar" id="stage1Actions"></div>
+      </section>
+
+      <!-- SCREEN: Public application form preview -->
+      <section class="screen" id="screen-apply-form">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchOpen()">Summer Internship 2026</button><span>/</span><span>Application form</span></div>
+        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goFormBuilder()">✎ Edit this form →</button></div>
+        <div class="hcm-card" style="max-width:460px; padding:26px 28px;">
+          <div style="font-weight:700; font-size:16px; margin-bottom:2px;">Apply — Summer Internship 2026</div>
+          <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:20px;">Posted by Preplify · applications close in 9 days</div>
+          <div id="applyInstructions"></div>
+          <div id="applyFields"></div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;" onclick="alert('Would submit the application, kick off AI screening immediately, and email the candidate a confirmation.')">Submit application</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Application form builder — Google-Forms-style editor -->
+      <section class="screen" id="screen-form-builder">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchOpen()">Summer Internship 2026</button><span>/</span><span>Edit application form</span></div>
+
+        <div class="hcm-card" style="padding:24px 26px; max-width:640px;">
+          <h3 style="margin-top:0;">Instructions shown to candidates</h3>
+          <div class="sd" style="margin-bottom:12px;">A short checklist candidates see at the top of the form, before they start filling it in.</div>
+          <ul class="fb-instr-list" id="fbInstrList"></ul>
+          <div class="fb-instr-add">
+            <input class="searchbox" id="fbInstrInput" type="text" placeholder="Add an instruction, e.g. &quot;Only apply with your official email&quot;">
+            <button class="btn btn-line" onclick="addInstruction()">+ Add</button>
+          </div>
+        </div>
+
+        <div class="hcm-card" style="padding:24px 26px; max-width:640px; margin-top:16px;">
+          <h3 style="margin-top:0;">Questions</h3>
+          <div class="sd" style="margin-bottom:14px;">What candidates fill in. Reorder, add, or remove your own — name, email, role, and CV are required by the system and can't be removed.</div>
+          <div id="fbQuestions"></div>
+          <button class="linkbtn" style="margin-top:6px;" onclick="toggleAddQuestion()">+ Add question</button>
+          <div class="fb-add-panel" id="fbAddPanel" style="display:none;">
+            <input class="searchbox" id="fbNewLabel" type="text" placeholder="Question text, e.g. &quot;City / Address&quot;">
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; align-items:center;">
+              <select class="fb-type-select" id="fbNewType">
+                <option value="short">Short answer</option>
+                <option value="paragraph">Paragraph</option>
+                <option value="choice">Dropdown</option>
+                <option value="file">File upload</option>
+              </select>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);"><input type="checkbox" id="fbNewRequired" checked> Required</label>
+            </div>
+            <div class="jd-actions" style="margin-top:12px;">
+              <button class="btn btn-ghost" onclick="toggleAddQuestion()">Cancel</button>
+              <button class="btn btn-primary" onclick="addQuestion()">Add question →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="savebar" style="max-width:640px;">
+          <button class="btn btn-line" onclick="goApplyForm()">Preview as a candidate →</button>
+          <button class="btn btn-primary" onclick="saveFormBuilder()">Save form</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Pipeline / funnel for one role (Senior React Developer, within Engineering Hiring batch) -->
+      <section class="screen" id="screen-pipeline">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchFinal()">Engineering Hiring — Q3 2026</button><span>/</span><span>Senior React Developer</span></div>
+
+        <div class="hcm-card panel jd-panel">
+          <div class="jd-head">
+            <h3>Job description<span class="jd-sub">What the AI scores every application against — edit it here, right where you review this role</span></h3>
+            <button class="btn btn-line" id="jdEditBtn-srd" onclick="toggleJdEdit('srd')">Edit →</button>
+          </div>
+          <div class="jd-view" id="jdView-srd">We're looking for a Senior React Developer to join our product engineering team. You'll own frontend architecture decisions for a growing SaaS product used by hundreds of businesses.
+
+Requirements:
+- 4+ years building production React applications
+- Strong TypeScript proficiency
+- Experience with state management (Context, Redux, or similar) and REST API integration
+- Comfortable working with CI/CD pipelines and automated testing
+- Bachelor's in Computer Science or equivalent practical experience
+
+Nice to have: Next.js, GraphQL, mentoring junior engineers.</div>
+          <div class="jd-edit-area" id="jdEditArea-srd" style="display:none;">
+            <textarea class="jd-textarea" id="jdTextarea-srd"></textarea>
+            <div class="jd-actions">
+              <button class="btn btn-ghost" onclick="cancelJdEdit('srd')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveJd('srd')">Save job description →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hcm-card" style="padding:24px 26px 8px; margin-bottom:18px;">
+          <div class="funnel">
+            <div class="funnel-stage"><div class="funnel-bar" style="height:92px;"></div><div class="funnel-count mono">120</div><div class="funnel-label">Applied<br>(via form)</div></div>
+            <div class="funnel-stage"><div class="funnel-bar" style="height:60px;"></div><div class="funnel-count mono">39</div><div class="funnel-label">Shortlisted<br>by AI screening</div></div>
+            <div class="funnel-stage"><div class="funnel-bar" style="height:44px;"></div><div class="funnel-count mono">28</div><div class="funnel-label">Completed the<br>AI interview</div></div>
+            <div class="funnel-stage"><div class="funnel-bar" style="height:26px;"></div><div class="funnel-count mono">5</div><div class="funnel-label">Forwarded<br>to you</div></div>
+          </div>
+        </div>
+        <div class="grid" style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+          <div class="hcm-card" style="padding:20px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+            <div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">5 candidates are ready for your review</div>
+              <div style="font-size:13px; color:var(--ink-soft);">Each has a resume, an AI relevance score, and a completed interview with transcript and evaluation attached.</div>
+            </div>
+            <button class="btn btn-primary" onclick="goShortlist()">Review shortlist →</button>
+          </div>
+          <div class="hcm-card" style="padding:20px 22px;">
+            <div style="font-size:12px; color:var(--ink-faint); margin-bottom:6px;">ALSO WAITING ON YOU</div>
+            <div style="font-size:13px; color:var(--ink-soft);"><b class="mono" style="color:var(--ink);">8</b> applications flagged human intervention needed — the AI couldn't confidently score them.</div>
+          </div>
+        </div>
+        <div class="secondary-actions">
+          <button class="linkbtn" onclick="goApplicants()">🔍 Browse all 120 applicants — not just the shortlist</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Shortlist grid -->
+      <section class="screen" id="screen-shortlist">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchFinal()">Engineering Hiring — Q3 2026</button><span>/</span><button onclick="goPipeline()">Senior React Developer</button><span>/</span><span>Shortlist</span></div>
+        <div class="candgrid" id="candgrid">
+          <div class="candcard" onclick="openCandidate('ayesha')">
+            <div class="top"><div class="initials">AR</div><div class="score mono">94</div></div>
+            <div class="nm">Ayesha Raza</div>
+            <div class="role">Sr. Frontend Engineer · 5 yrs</div>
+            <div class="highlight">Deep React/TypeScript background; led a 3-person frontend team at her last role.</div>
+            <span class="status-pill status-pill--brand">Awaiting your review</span>
+            <div class="interview-time-chip">🕐 Interviewed Jul 2, 10:00 AM</div>
+          </div>
+          <div class="candcard" onclick="openCandidate('bilal')">
+            <div class="top"><div class="initials">BA</div><div class="score mono">91</div></div>
+            <div class="nm">Bilal Ahmed</div>
+            <div class="role">Frontend Lead · 6 yrs</div>
+            <div class="highlight">Strong architecture sense; interview flagged salary expectations above the posted band.</div>
+            <span class="status-pill status-pill--brand">Awaiting your review</span>
+            <div class="interview-time-chip">🕐 Interviewed Jul 2, 11:00 AM</div>
+          </div>
+          <div class="candcard" onclick="openCandidate('hassan')" id="card-hassan">
+            <div class="top"><div class="initials">HA</div><div class="score mono">88</div></div>
+            <div class="nm">Hassan Ali</div>
+            <div class="role">Full Stack Developer · 4 yrs</div>
+            <div class="highlight">Solid React + Node fundamentals; self-taught testing practices, freelance background.</div>
+            <span class="status-pill status-pill--brand" id="pill-hassan">Awaiting your review</span>
+            <div class="interview-time-chip">🕐 Interviewed Jul 2, 2:00 PM</div>
+          </div>
+          <div class="candcard" onclick="openCandidate('mehak')">
+            <div class="top"><div class="initials">MF</div><div class="score mono">86</div></div>
+            <div class="nm">Mehak Fatima</div>
+            <div class="role">React Developer · 3 yrs</div>
+            <div class="highlight">Fast learner, strong UI instincts; less exposure to large-scale codebases.</div>
+            <span class="status-pill status-pill--brand">Awaiting your review</span>
+            <div class="interview-time-chip">🕐 Interviewed Jul 3, 9:30 AM</div>
+          </div>
+          <div class="candcard" onclick="openCandidate('usman')">
+            <div class="top"><div class="initials">UT</div><div class="score mono">83</div></div>
+            <div class="nm">Usman Tariq</div>
+            <div class="role">Sr. Software Engineer · 7 yrs</div>
+            <div class="highlight">Most senior of the five; interview suggested the role may be a step down for him.</div>
+            <span class="status-pill status-pill--brand">Awaiting your review</span>
+            <div class="interview-time-chip">🕐 Interviewed Jul 3, 11:00 AM</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Candidate detail (Hassan Ali) -->
+      <section class="screen" id="screen-detail">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchFinal()">Engineering Hiring — Q3 2026</button><span>/</span><button onclick="goPipeline()">Senior React Developer</button><span>/</span><button onclick="goShortlist()">Shortlist</button><span>/</span><span>Hassan Ali</span></div>
+
+        <div class="toast" id="hireToast">
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Hassan Ali moved to Offer.</b> His profile will pre-fill a new Employee record once he accepts — the other 4 stay on file for this or future openings.</div>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-id">
+            <div class="initials">HA</div>
+            <div>
+              <h2>Hassan Ali</h2>
+              <div class="role">Full Stack Developer · 4 yrs experience · Karachi</div>
+              <div class="interview-time-chip">🕐 Interviewed Jul 2, 2026 — 2:00 PM (32 min)</div>
+            </div>
+          </div>
+          <div class="scorebox"><div class="n mono">88</div><div class="l">Interview score</div></div>
+        </div>
+
+        <div class="detail-grid">
+          <div>
+            <div class="hcm-card panel">
+              <h3>Interview score breakdown — not just one number</h3>
+              <div class="critrow"><div class="lbl">Role competency</div><div class="critbar"><div class="fill" style="width:88%;"></div></div><div class="val mono">88</div></div>
+              <div class="critrow"><div class="lbl">Communication clarity</div><div class="critbar"><div class="fill" style="width:92%;"></div></div><div class="val mono">92</div></div>
+              <div class="critrow"><div class="lbl">Problem-solving approach</div><div class="critbar"><div class="fill" style="width:81%;"></div></div><div class="val mono">81</div></div>
+              <div class="critrow"><div class="lbl">Culture &amp; values fit</div><div class="critbar"><div class="fill" style="width:75%;"></div></div><div class="val mono">75</div></div>
+              <div class="critrow"><div class="lbl">Motivation &amp; interest</div><div class="critbar"><div class="fill" style="width:94%;"></div></div><div class="val mono">94</div></div>
+            </div>
+
+            <div class="hcm-card panel">
+              <h3>Screening — why the AI shortlisted him</h3>
+              <p style="margin:0 0 14px; font-size:13.5px; color:var(--ink-soft); line-height:1.55;">"Strong hands-on React/TypeScript experience across three freelance contracts. Testing experience is limited to basic unit tests, with no CI/CD pipeline exposure mentioned — flagged as a gap, not a disqualifier."</p>
+              <div class="chiprow">
+                <span class="chip match">React — matched</span>
+                <span class="chip match">TypeScript — matched</span>
+                <span class="chip match">Node.js — matched</span>
+                <span class="chip match">REST APIs — matched</span>
+                <span class="chip gap">CI/CD — gap</span>
+                <span class="chip gap">Automated testing — partial</span>
+              </div>
+            </div>
+
+            <div class="hcm-card panel">
+              <div class="panel-head-row">
+                <h3>Interview transcript (excerpt)</h3>
+                <button class="recording-toggle" id="recordingToggleBtn" onclick="toggleRecordingPanel()">🎧 Check recording</button>
+              </div>
+              <div class="audio-player-wrap" id="audioPlayerWrap" style="display:none;">
+                <div class="audio-player show" id="audioPlayer">
+                  <button class="audio-play-btn" id="audioPlayBtn" onclick="toggleAudioPlay()">▶</button>
+                  <div class="audio-track" onclick="scrubAudio(event)"><div class="audio-progress" id="audioProgress"></div></div>
+                  <div class="audio-time mono" id="audioTime">00:00 / 32:06</div>
+                  <select class="audio-speed" id="audioSpeed">
+                    <option value="1">1×</option>
+                    <option value="1.5">1.5×</option>
+                    <option value="2">2×</option>
+                  </select>
+                  <button class="viewlink" onclick="alert('Would download the full interview audio file.')">⬇ Download</button>
+                </div>
+                <div class="audio-note">Voice interview, conducted and recorded by the AI VC Interface — no video component.</div>
+              </div>
+              <div class="transcript">
+                <div class="bubble ai"><div class="who">AI interviewer</div>Walk me through a recent project where you had to trade off performance against code readability.</div>
+                <div class="bubble cand"><div class="who">Hassan Ali</div>I was optimizing a dashboard with heavy re-renders. I used React.memo and useMemo selectively rather than everywhere — over-memoizing actually hurt readability without a measurable gain.</div>
+                <div class="bubble ai"><div class="who">AI interviewer</div>How do you approach testing in your projects?</div>
+                <div class="bubble cand"><div class="who">Hassan Ali</div>Honestly, this is an area I'm actively improving. I write unit tests for utility functions but haven't set up full CI pipelines on my own contracts — most clients didn't require it.</div>
+                <div class="bubble ai"><div class="who">AI interviewer</div>How do you usually handle a code review where you disagree with the reviewer?</div>
+                <div class="bubble cand"><div class="who">Hassan Ali</div>I ask them to walk me through their reasoning first. Most of the time I learn something; if I still disagree, I'll propose an alternative with a concrete example rather than just pushing back.</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="hcm-card panel">
+              <h3>AI evaluation</h3>
+              <div style="font-size:11.5px; color:var(--ink-faint); margin-bottom:2px; font-family:var(--font-mono);">STRENGTHS</div>
+              <ul class="evallist strengths" style="margin-bottom:16px;">
+                <li>Clear, specific articulation of architecture decisions — not just buzzwords</li>
+                <li>Self-aware about his own gaps rather than overselling</li>
+                <li>Describes a collaborative, evidence-based approach to disagreement</li>
+              </ul>
+              <div style="font-size:11.5px; color:var(--ink-faint); margin-bottom:2px; font-family:var(--font-mono);">CONCERNS</div>
+              <ul class="evallist concerns">
+                <li>No CI/CD or automated-testing-pipeline experience</li>
+                <li>Freelance background means less exposure to team code-review norms</li>
+              </ul>
+            </div>
+            <div class="hcm-card panel">
+              <h3>Application source</h3>
+              <p style="font-size:13px; color:var(--ink-soft); margin:0;">Submitted via the public application form (LinkedIn post), <span class="mono">3 days ago</span>. Resume and full transcript are attached to this record.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="actionbar">
+          <button class="btn btn-line email-cta" data-batch="eng" onclick="alert('Would open an email composer addressed to Hassan Ali.')">✉ Email candidate</button>
+          <button class="btn btn-danger-ghost" onclick="rejectCandidate()">Reject</button>
+          <button class="btn btn-line" onclick="alert('Would open a scheduling dialog for a follow-up human interview.')">Schedule another round</button>
+          <button class="btn btn-primary" onclick="selectCandidate()">Select for offer →</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: Applicant browser (all 120, not just the shortlist) -->
+      <section class="screen" id="screen-applicants">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchFinal()">Engineering Hiring — Q3 2026</button><span>/</span><button onclick="goPipeline()">Senior React Developer</button><span>/</span><span>All applicants</span></div>
+        <div class="filterbar">
+          <input class="searchbox" type="text" placeholder="Search by name, skill, or keyword…">
+          <button class="fchip active">All (120)</button>
+          <button class="fchip">Forwarded to you (5)</button>
+          <button class="fchip">Interviewed (28)</button>
+          <button class="fchip">Human intervention needed (8)</button>
+          <button class="fchip">Rejected (78)</button>
+        </div>
+        <div class="applicant-count">Showing 16 of 120 — a representative sample for this walkthrough</div>
+        <div class="hcm-card" style="padding:0;">
+          <div class="wrap-x">
+          <table class="apptable">
+            <tr><th>Applicant</th><th>Screening score</th><th>Status</th><th></th></tr>
+            <tr class="rowhover" onclick="goShortlist()"><td class="namecell">Ayesha Raza</td><td class="score mono" style="color:var(--success-fg);">94</td><td><span class="status-pill status-pill--active">Forwarded to you</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="goShortlist()"><td class="namecell">Bilal Ahmed</td><td class="score mono" style="color:var(--success-fg);">91</td><td><span class="status-pill status-pill--active">Forwarded to you</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openCandidate('hassan')"><td class="namecell">Hassan Ali</td><td class="score mono" style="color:var(--success-fg);">88</td><td><span class="status-pill status-pill--active">Forwarded to you</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="goShortlist()"><td class="namecell">Mehak Fatima</td><td class="score mono" style="color:var(--success-fg);">86</td><td><span class="status-pill status-pill--active">Forwarded to you</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="goShortlist()"><td class="namecell">Usman Tariq</td><td class="score mono" style="color:var(--success-fg);">83</td><td><span class="status-pill status-pill--active">Forwarded to you</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Fahad Sheikh<div class="rolecell">Interviewed</div></td><td class="score mono">79</td><td><span class="status-pill status-pill--on-leave">Interviewed, not selected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Sana Malik<div class="rolecell">Interviewed</div></td><td class="score mono">74</td><td><span class="status-pill status-pill--on-leave">Interviewed, not selected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Sara Iqbal<div class="rolecell">Resume screen</div></td><td class="score mono">72</td><td><span class="status-pill status-pill--brand">Human intervention needed</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Zainab Qureshi<div class="rolecell">Interview no-show</div></td><td class="score mono">68</td><td><span class="status-pill status-pill--probation">Not selected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Danish Ali<div class="rolecell">Resume screen</div></td><td class="score mono">65</td><td><span class="status-pill status-pill--brand">Human intervention needed</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openApplicantCV()"><td class="namecell">Ali Raza<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--warning-fg);">61</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Hamza Khan<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--warning-fg);">58</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Noor Fatima<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--warning-fg);">55</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Imran Sheikh<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--danger-fg);">45</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Kamran Yousaf<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--danger-fg);">40</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Fatima Noor<div class="rolecell">Resume screen</div></td><td class="score mono" style="color:var(--danger-fg);">38</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td><button class="viewlink">View →</button></td></tr>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: CV-only detail for a screened-out applicant, with override -->
+      <section class="screen" id="screen-cv">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchFinal()">Engineering Hiring — Q3 2026</button><span>/</span><button onclick="goPipeline()">Senior React Developer</button><span>/</span><button onclick="goApplicants()">All applicants</button><span>/</span><span>Ali Raza</span></div>
+
+        <div class="toast" id="overrideToast">
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Ali Raza added to the shortlist.</b> He'll now be invited to interview alongside the AI-selected candidates. Your override reason is saved to the audit log.</div>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-id">
+            <div class="initials">AR</div>
+            <div><h2>Ali Raza</h2><div class="role">Frontend Developer · 2 yrs experience · Lahore</div></div>
+          </div>
+          <div class="scorebox" style="background:var(--warning-bg);">
+            <div class="n mono" style="color:var(--warning-fg);">61</div>
+            <div class="l" style="color:var(--warning-fg);">Screening score</div>
+          </div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Screening score breakdown</h3>
+          <div class="critrow"><div class="lbl">Skills match</div><div class="critbar"><div class="fill" style="width:55%;background:linear-gradient(90deg,var(--warning-border),var(--warning-fg));"></div></div><div class="val mono">55</div></div>
+          <div class="critrow"><div class="lbl">Experience relevance</div><div class="critbar"><div class="fill" style="width:60%;background:linear-gradient(90deg,var(--warning-border),var(--warning-fg));"></div></div><div class="val mono">60</div></div>
+          <div class="critrow"><div class="lbl">Education fit</div><div class="critbar"><div class="fill" style="width:70%;"></div></div><div class="val mono">70</div></div>
+          <div class="critrow"><div class="lbl">Career stability</div><div class="critbar"><div class="fill" style="width:65%;"></div></div><div class="val mono">65</div></div>
+        </div>
+
+        <div class="hcm-card panel">
+          <h3>Résumé excerpt</h3>
+          <p style="font-size:13.5px;color:var(--ink-soft);margin:0;">"...built and maintain three personal projects using React and a typed component layer, all on GitHub (portfolio link included). Two years freelancing on WordPress-to-React migrations for local Lahore businesses..."</p>
+          <div class="chiprow" style="margin-top:12px;">
+            <span class="chip match">React — matched</span>
+            <span class="chip gap">TypeScript — not listed as a skill keyword</span>
+            <span class="chip match">Git/GitHub — matched</span>
+          </div>
+        </div>
+
+        <div class="overridecard">
+          <div class="t">Why this one might be worth a second look</div>
+          <p class="s">The résumé never uses the literal word "TypeScript" as a listed skill — which is why the automated match came back low — but the linked GitHub portfolio (visible in the full resume, not shown in this excerpt) is written in TypeScript throughout. Keyword-based skill matching missed contextual evidence a human reader would catch immediately.</p>
+        </div>
+
+        <div class="actionbar">
+          <button class="btn btn-line email-cta" data-batch="eng" onclick="alert('Would open an email composer addressed to Ali Raza.')">✉ Email candidate</button>
+          <button class="btn btn-line" onclick="goApplicants()">Keep as rejected</button>
+          <button class="btn btn-primary" onclick="overrideAddToShortlist()">Add to shortlist anyway →</button>
+        </div>
+      </section>
+
+      <!-- SCREEN: CV Pool -->
+      <section class="screen" id="screen-cvpool">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>CV Pool</span></div>
+
+        <div class="poolbanner">
+          <div class="pb-num mono">147</div>
+          <div>
+            <div class="pb-title">CVs on file across every past and current batch</div>
+            <div class="pb-sub">Check here before running a new LinkedIn/Indeed campaign — someone who didn't fit last time might fit now.</div>
+          </div>
+        </div>
+
+        <h3>Suggested matches for currently open roles</h3>
+        <div class="matchcard">
+          <div class="mc-left">
+            <div class="initials" style="background:var(--brand-300);color:var(--brand-700);">OF</div>
+          </div>
+          <div class="mc-mid">
+            <div class="mc-name">Omar Farooq</div>
+            <div class="mc-hist">Applied: <b>AI/ML Intern</b>, Summer Internship 2025 — <span style="color:var(--danger-fg);">rejected</span> (insufficient ML project experience at the time)</div>
+            <div class="mc-now">Now a <b class="mono" style="color:var(--success-fg);">82</b> match for <b>Backend Engineer</b>, Engineering Hiring — Q3 2026 — a year of shipped backend work since his last application.</div>
+          </div>
+          <button class="btn btn-line" onclick="alert('Would open Omar Farooq\'s current CV and let HR add him directly to the Backend Engineer shortlist, no new posting needed.')">Review →</button>
+        </div>
+        <div class="matchcard">
+          <div class="mc-left">
+            <div class="initials" style="background:var(--brand-300);color:var(--brand-700);">ZQ</div>
+          </div>
+          <div class="mc-mid">
+            <div class="mc-name">Zainab Qureshi</div>
+            <div class="mc-hist">Applied: <b>Senior React Developer</b>, Engineering Hiring Q3 2026 — interview no-show</div>
+            <div class="mc-now">Now a <b class="mono" style="color:var(--success-fg);">75</b> match for <b>Frontend Intern</b>, Summer Internship 2026 — closer fit for an internship level than the senior role she originally tried for.</div>
+          </div>
+          <button class="btn btn-line" onclick="alert('Would open Zainab Qureshi\'s CV and let HR add her to the Frontend Intern shortlist for Summer Internship 2026.')">Review →</button>
+        </div>
+
+        <h3 style="margin-top:28px;">All CVs on file</h3>
+        <div class="filterbar">
+          <input class="searchbox" type="text" placeholder="Search by name, skill, or previous role…">
+          <button class="fchip active">All batches</button>
+          <button class="fchip">Summer Internship 2026</button>
+          <button class="fchip">Engineering Hiring Q3 2026</button>
+          <button class="fchip">Summer Internship 2025</button>
+        </div>
+        <div class="hcm-card" style="padding:0;">
+          <div class="wrap-x">
+          <table class="apptable">
+            <tr><th>Applicant</th><th>Originally applied for</th><th>Outcome</th><th>Applied</th><th></th></tr>
+            <tr class="rowhover"><td class="namecell">Omar Farooq</td><td class="rolecell">AI/ML Intern, 2025</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">11 months ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Zainab Qureshi</td><td class="rolecell">Senior React Developer, 2026</td><td><span class="status-pill status-pill--probation">No-show</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">3 weeks ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Fahad Sheikh</td><td class="rolecell">Senior React Developer, 2026</td><td><span class="status-pill status-pill--on-leave">Interviewed, not selected</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">3 weeks ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Sana Malik</td><td class="rolecell">Senior React Developer, 2026</td><td><span class="status-pill status-pill--on-leave">Interviewed, not selected</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">3 weeks ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover" onclick="openApplicantCV()"><td class="namecell">Ali Raza</td><td class="rolecell">Senior React Developer, 2026</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">3 weeks ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Hamza Khan</td><td class="rolecell">Senior React Developer, 2026</td><td><span class="status-pill status-pill--probation">Rejected</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">3 weeks ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Bilal Nasir</td><td class="rolecell">Frontend Intern, 2025</td><td><span class="status-pill status-pill--active">Hired</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">11 months ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Hina Abbas</td><td class="rolecell">AI/ML Intern, 2025</td><td><span class="status-pill status-pill--active">Hired</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">11 months ago</td><td><button class="viewlink">View →</button></td></tr>
+            <tr class="rowhover"><td class="namecell">Hira Sultan</td><td class="rolecell">Frontend Intern, 2026</td><td><span class="status-pill status-pill--brand">Shortlisted</span></td><td class="mono" style="font-size:12px;color:var(--ink-faint);">2 days ago</td><td><button class="viewlink">View →</button></td></tr>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Settings — configurable options, per hiring batch -->
+      <section class="screen" id="screen-settings">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Settings</span></div>
+
+        <div class="batchpicker" id="settingsBatchPicker"></div>
+
+        <div class="aiswitch-card">
+          <div>
+            <div class="t">🧠 Preplify Intelligence</div>
+            <div class="s" id="aiSwitchDesc"></div>
+          </div>
+          <div class="aiswitch-right">
+            <span class="aiswitch-state" id="aiSwitchState">ON</span>
+            <label class="aiswitch">
+              <input type="checkbox" id="aiSwitchInput" checked onchange="toggleIntelligence()">
+              <span class="track"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="hcm-card" style="padding:6px 24px;">
+          <div id="settingsAiOnly">
+            <div class="settings-row">
+              <div><div class="st">Scoring weights</div><div class="sd">How much each criterion counts toward the overall score, per role.</div></div>
+              <div>
+                <div style="margin-bottom:10px;"><label style="font-size:12.5px;color:var(--ink-soft);">Skills match</label><input class="weightslider" type="range" value="70"></div>
+                <div style="margin-bottom:10px;"><label style="font-size:12.5px;color:var(--ink-soft);">Experience relevance</label><input class="weightslider" type="range" value="55"></div>
+                <div><label style="font-size:12.5px;color:var(--ink-soft);">Culture &amp; values fit</label><input class="weightslider" type="range" value="40"></div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div><div class="st">Auto-decision thresholds</div><div class="sd">Below this score, an application is auto-rejected. Above this, it's auto-shortlisted. Leave the reject field blank to never auto-reject.</div></div>
+              <div style="display:flex; gap:20px; align-items:center;">
+                <div><label style="display:block;font-size:12px;color:var(--ink-faint);margin-bottom:4px;">Auto-reject below</label><input class="threshold-input mono" type="text" value="50"></div>
+                <div><label style="display:block;font-size:12px;color:var(--ink-faint);margin-bottom:4px;">Auto-shortlist above</label><input class="threshold-input mono" type="text" value="65"></div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div><div class="st">Human-review queue size</div><div class="sd">How many "human intervention needed" applications route to you instead of an automatic decision.</div></div>
+              <input class="threshold-input mono" type="text" value="8"> <span style="font-size:12.5px;color:var(--ink-faint);">applications per role</span>
+            </div>
+          </div>
+
+          <div id="settingsManualOnly" style="display:none;">
+            <div class="mode-banner off">
+              <div>🤝 <b>You're running this batch manually.</b> Nothing is auto-screened, auto-scheduled, or auto-decided. An <b>✉ Email candidate</b> button now appears wherever you review an applicant, and each stage below has its own "Let AI complete this stage" option if you want AI to take over just that one step.</div>
+            </div>
+            <div class="settings-row" style="grid-template-columns:220px 1fr;">
+              <div><div class="st">Interview scheduling</div><div class="sd">Set the times you're free — Calendly-style. Candidates get offered these slots when you schedule their interview yourself.</div></div>
+              <div class="hcm-card calbox">
+                <div>
+                  <div class="cal-head"><div class="m">August 2026</div><div class="cal-nav"><button>‹</button><button>›</button></div></div>
+                  <div class="cal-grid">
+                    <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                    <div class="cal-day muted"></div><div class="cal-day muted"></div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Wed, Aug 3')">3</div>
+                    <div class="cal-day muted">4</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Fri, Aug 5')">5</div>
+                    <div class="cal-day muted">6</div><div class="cal-day muted">7</div>
+                    <div class="cal-day muted">8</div><div class="cal-day muted">9</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Mon, Aug 10')">10</div>
+                    <div class="cal-day muted">11</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Wed, Aug 12')">12</div>
+                    <div class="cal-day muted">13</div><div class="cal-day muted">14</div>
+                    <div class="cal-day muted">15</div><div class="cal-day muted">16</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Mon, Aug 17')">17</div>
+                    <div class="cal-day muted">18</div><div class="cal-day muted">19</div>
+                    <div class="cal-day muted">20</div><div class="cal-day muted">21</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Mon, Aug 24')">24</div>
+                    <div class="cal-day muted">25</div><div class="cal-day muted">26</div>
+                    <div class="cal-day muted">27</div><div class="cal-day muted">28</div>
+                    <div class="cal-day muted">29</div><div class="cal-day muted">30</div>
+                    <div class="cal-day avail" onclick="selectCalDay(this,'Mon, Aug 31')">31</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="cal-slots-label">Time slots — <span id="calPickedDay">pick a day</span></div>
+                  <div id="calSlotsWrap" style="display:none;">
+                    <div class="cal-slots">
+                      <button class="cal-slot" onclick="selectCalSlot(this,'10:00 AM')">10:00 AM</button>
+                      <button class="cal-slot" onclick="selectCalSlot(this,'11:30 AM')">11:30 AM</button>
+                      <button class="cal-slot" onclick="selectCalSlot(this,'1:00 PM')">1:00 PM</button>
+                      <button class="cal-slot" onclick="selectCalSlot(this,'2:30 PM')">2:30 PM</button>
+                      <button class="cal-slot" onclick="selectCalSlot(this,'4:00 PM')">4:00 PM</button>
+                    </div>
+                    <div class="cal-confirm">
+                      <span class="picked" id="calConfirmText">Pick a day, then a time slot.</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" style="margin-top:16px;" onclick="saveAvailability()">Save availability →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <div><div class="st">Interview question set</div><div class="sd" id="qeditorLabel">AI-generated per role, editable before it goes live.</div></div>
+            <button class="btn btn-line" onclick="openQEditor()">Edit questions for a role →</button>
+          </div>
+          <div class="qeditor-panel" id="qeditorPanel" style="display:none; grid-column:1/-1; margin:-4px 0 16px;">
+            <div class="qeditor-roles" id="qeditorRoles"></div>
+            <textarea class="qeditor-textarea" id="qeditorTextarea" placeholder="One question per line…"></textarea>
+            <div class="jd-actions" style="margin-top:10px;">
+              <button class="btn btn-ghost" onclick="document.getElementById('qeditorPanel').style.display='none';">Cancel</button>
+              <button class="btn btn-primary" onclick="saveQuestions()">Save questions →</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <div><div class="st">Notification cadence</div><div class="sd">How often you hear about pipeline activity.</div></div>
+            <div class="radiorow">
+              <label><input type="radio" name="cadence" checked> Real-time</label>
+              <label><input type="radio" name="cadence"> Daily digest</label>
+              <label><input type="radio" name="cadence"> Weekly summary</label>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div><div class="st">Candidate-facing branding</div><div class="sd">What candidates see on the application form and interview screen — your company, not "Preplify."</div></div>
+            <button class="btn btn-line">Upload logo &amp; set company name →</button>
+          </div>
+          <div class="savebar">
+            <button class="btn btn-ghost">Cancel</button>
+            <button class="btn btn-primary" onclick="alert('Would save these settings.')">Save settings</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: Connect Platforms — job board connections -->
+      <section class="screen" id="screen-connect-platforms">
+        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Connections</span></div>
+
+        <div class="mode-banner on" style="margin-top:0;">📡 <b>One post, everywhere it's actually connected.</b> When you click "Publish batch," Preplify posts automatically to every platform below that's connected — nothing copy-pasted by hand, and nothing sent anywhere that isn't turned on.</div>
+
+        <div id="platformList"></div>
+
+        <div class="callout-note-box" style="margin-top:18px;">Curious how each of these actually works under the hood — API vs. feed, what access requires, and why LinkedIn works differently? See the full research writeup, <span class="mono">Preplify-MultiPlatform-Job-Posting-Research.pdf</span>.</div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<div class="global-toast" id="globalToast"></div>
+<script src="script.js"></script>
+</body>
+</html>
