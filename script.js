@@ -28,10 +28,20 @@ function goBatches(){
 }
 function goCreateBatch(){
   show('screen-create-batch', 'Create hiring batch', 'One post, several roles, one shared timeline', 'nav-hiring');
-  resetBatchCal();
   renderWherePosted();
-  resetBannerUpload();
   syncCrumb('screen-create-batch');
+}
+
+/* Only called when actually starting a fresh batch (the "+ Create new hiring batch"
+   card) — clears the date range, banner, and draft form so a half-finished detour
+   (like editing the application form) doesn't wipe out what was already filled in. */
+function startNewBatch(){
+  resetBatchCal();
+  resetBannerUpload();
+  var nameInput = document.getElementById('newBatchNameInput');
+  if (nameInput) nameInput.value = '';
+  FORMS.draft = freshForm();
+  goCreateBatch();
 }
 
 /* ---------- batch banner — standard 1200×630 image, previewed client-side ---------- */
@@ -124,25 +134,21 @@ function goBatchInterviewing(){
   show('screen-batch-interviewing', 'Customer Support Hiring — Q3 2026', 'Stage 2 — Interviewing · 1 interview live right now', 'nav-hiring');
   syncCrumb('screen-batch-interviewing');
 }
-function goApplyForm(){
-  renderApplyFormPreview();
-  show('screen-apply-form', 'Application form preview', 'What a candidate sees after clicking the LinkedIn/Indeed post', 'nav-hiring');
-  syncCrumb('screen-apply-form');
-}
-
 /* ---------------------------------------------------------------
    Application form builder — Google-Forms-style editor for the
-   public application form (Summer Internship 2026), plus the
-   data-driven candidate-facing preview it feeds.
+   public application form, genuinely per batch. "draft" holds
+   whatever's being set up on the Create Batch screen before a batch
+   exists; publishing a batch snapshots the draft into that batch's
+   own slot and resets the draft to defaults for the next one.
    --------------------------------------------------------------- */
 
-var FORM_INSTRUCTIONS = [
+var DEFAULT_FORM_INSTRUCTIONS = [
   'Apply using your own personal or official email address — applications from shared, work-shared, or clearly fake emails are automatically rejected.',
   'Upload your CV as a PDF or DOCX file, under 5MB.',
   'Double-check your role choice below — you can only submit one application per batch.'
 ];
 
-var FORM_FIELDS = [
+var DEFAULT_FORM_FIELDS = [
   { id:'name',  type:'short',      label:'Full name',                         required:true, locked:true },
   { id:'email', type:'short',      label:'Email address',                     required:true, locked:true, placeholder:'you@email.com' },
   { id:'age',   type:'short',      label:'Age',                               required:true, placeholder:'e.g. 21' },
@@ -151,20 +157,72 @@ var FORM_FIELDS = [
   { id:'cv',    type:'file',       label:'Upload your CV',                    required:true, locked:true }
 ];
 
+function freshForm(){
+  return {
+    instructions: DEFAULT_FORM_INSTRUCTIONS.slice(),
+    fields: DEFAULT_FORM_FIELDS.map(function(f){ return Object.assign({}, f); })
+  };
+}
+
+var FORMS = { open26: freshForm(), draft: freshForm() };
+var currentFormBatchKey = 'draft';
+var currentApplyFormBatchKey = 'open26';
+
 var FB_TYPE_LABEL = { short:'Short answer', paragraph:'Paragraph', choice:'Dropdown', file:'File upload', role:'Multiple choice (roles)' };
 
-function goFormBuilder(){
+function getBatchRoleLabels(batchKey){
+  if (batchKey === 'open26') return Object.keys(ROLE_META).map(function(k){ return ROLE_META[k].label; });
+  if (CUSTOM_BATCHES[batchKey]) return CUSTOM_BATCHES[batchKey].roles.map(function(r){ return r.label; });
+  if (batchKey === 'draft'){
+    var labels = [];
+    document.querySelectorAll('#screen-create-batch .rolerow-block .rolerow input.searchbox').forEach(function(inp){
+      if (inp.value.trim()) labels.push(inp.value.trim());
+    });
+    return labels.length ? labels : ['Role'];
+  }
+  return ['Role'];
+}
+
+function goApplyForm(batchKey){
+  if (batchKey) currentApplyFormBatchKey = batchKey;
+  renderApplyFormPreview();
+  show('screen-apply-form', 'Application form preview', 'What a candidate sees after clicking the LinkedIn/Indeed post', 'nav-hiring');
+  syncCrumb('screen-apply-form');
+}
+
+function goFormBuilder(batchKey){
+  currentFormBatchKey = batchKey || currentApplyFormBatchKey || 'draft';
+  currentApplyFormBatchKey = currentFormBatchKey;
+  if (!FORMS[currentFormBatchKey]) FORMS[currentFormBatchKey] = freshForm();
   renderFormBuilder();
-  show('screen-form-builder', 'Application Form', 'Summer Internship 2026 · questions and instructions candidates see', 'nav-hiring');
+
+  var batchLabel, backLink;
+  if (currentFormBatchKey === 'draft'){
+    batchLabel = 'this new batch';
+    backLink = '<button onclick="goCreateBatch()">Create batch</button>';
+  } else if (currentFormBatchKey === 'open26'){
+    batchLabel = BATCH_SETTINGS.open26.label;
+    backLink = '<button onclick="goBatchOpen()">' + batchLabel + '</button>';
+  } else if (CUSTOM_BATCHES[currentFormBatchKey]){
+    batchLabel = CUSTOM_BATCHES[currentFormBatchKey].name;
+    backLink = '<button onclick="goBatchCustom(\'' + currentFormBatchKey + '\')">' + batchLabel + '</button>';
+  } else {
+    batchLabel = BATCH_SETTINGS[currentFormBatchKey] ? BATCH_SETTINGS[currentFormBatchKey].label : currentFormBatchKey;
+    backLink = '<span>' + batchLabel + '</span>';
+  }
+  document.getElementById('formBuilderCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span>' + backLink + '<span class="sep">/</span><span class="current">Edit application form</span>';
+
+  show('screen-form-builder', 'Application Form', batchLabel + ' · questions and instructions candidates see', 'nav-hiring');
   syncCrumb('screen-form-builder');
 }
 
 function renderFormBuilder(){
-  document.getElementById('fbInstrList').innerHTML = FORM_INSTRUCTIONS.map(function(text, i){
+  var form = FORMS[currentFormBatchKey];
+  document.getElementById('fbInstrList').innerHTML = form.instructions.map(function(text, i){
     return '<li><span>' + text + '</span><button class="fb-instr-remove" onclick="removeInstruction(' + i + ')" title="Remove">✕</button></li>';
   }).join('');
 
-  document.getElementById('fbQuestions').innerHTML = FORM_FIELDS.map(function(f, i){
+  document.getElementById('fbQuestions').innerHTML = form.fields.map(function(f, i){
     var actions = f.locked
       ? '<span class="fb-locked-note">Required by the system</span>'
       : '<button title="Move up" onclick="moveQuestion(' + i + ',-1)">▲</button><button title="Move down" onclick="moveQuestion(' + i + ',1)">▼</button><button title="Remove" onclick="removeQuestion(' + i + ')">✕</button>';
@@ -179,26 +237,28 @@ function addInstruction(){
   var input = document.getElementById('fbInstrInput');
   var text = input.value.trim();
   if (!text) return;
-  FORM_INSTRUCTIONS.push(text);
+  FORMS[currentFormBatchKey].instructions.push(text);
   input.value = '';
   renderFormBuilder();
 }
 function removeInstruction(i){
-  FORM_INSTRUCTIONS.splice(i, 1);
+  FORMS[currentFormBatchKey].instructions.splice(i, 1);
   renderFormBuilder();
 }
 
 function moveQuestion(i, dir){
+  var fields = FORMS[currentFormBatchKey].fields;
   var j = i + dir;
-  if (j < 0 || j >= FORM_FIELDS.length || FORM_FIELDS[j].locked) return;
-  var tmp = FORM_FIELDS[i];
-  FORM_FIELDS[i] = FORM_FIELDS[j];
-  FORM_FIELDS[j] = tmp;
+  if (j < 0 || j >= fields.length || fields[j].locked) return;
+  var tmp = fields[i];
+  fields[i] = fields[j];
+  fields[j] = tmp;
   renderFormBuilder();
 }
 function removeQuestion(i){
-  if (FORM_FIELDS[i].locked) return;
-  FORM_FIELDS.splice(i, 1);
+  var fields = FORMS[currentFormBatchKey].fields;
+  if (fields[i].locked) return;
+  fields.splice(i, 1);
   renderFormBuilder();
 }
 function toggleAddQuestion(){
@@ -216,9 +276,10 @@ function addQuestion(){
   if (!label){ document.getElementById('fbNewLabel').focus(); return; }
   var type = document.getElementById('fbNewType').value;
   var required = document.getElementById('fbNewRequired').checked;
-  var field = { id:'q' + FORM_FIELDS.length + '_' + Math.round(Math.random() * 9999), type:type, label:label, required:required };
+  var fields = FORMS[currentFormBatchKey].fields;
+  var field = { id:'q' + fields.length + '_' + Math.round(Math.random() * 9999), type:type, label:label, required:required };
   if (type === 'choice') field.options = ['Option 1', 'Option 2'];
-  FORM_FIELDS.push(field);
+  fields.push(field);
   toggleAddQuestion();
   renderFormBuilder();
   showToast('<b>Question added.</b> "' + label + '" now appears on the live application form.');
@@ -228,14 +289,16 @@ function saveFormBuilder(){
 }
 
 function renderApplyFormPreview(){
-  document.getElementById('applyInstructions').innerHTML = FORM_INSTRUCTIONS.length
-    ? '<div class="apply-instructions"><div class="ai-t">Before you apply</div><ul>' + FORM_INSTRUCTIONS.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul></div>'
+  var form = FORMS[currentApplyFormBatchKey] || FORMS.draft;
+  document.getElementById('applyInstructions').innerHTML = form.instructions.length
+    ? '<div class="apply-instructions"><div class="ai-t">Before you apply</div><ul>' + form.instructions.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul></div>'
     : '';
 
-  document.getElementById('applyFields').innerHTML = FORM_FIELDS.map(function(f){
+  var roleLabels = getBatchRoleLabels(currentApplyFormBatchKey);
+  document.getElementById('applyFields').innerHTML = form.fields.map(function(f){
     var star = f.required ? ' <span class="fb-req-star">*</span>' : '';
     if (f.type === 'role'){
-      var roleOpts = Object.keys(ROLE_META).map(function(k){ return '<label><input type="radio" name="role"> ' + ROLE_META[k].label + '</label>'; }).join('');
+      var roleOpts = roleLabels.map(function(label){ return '<label><input type="radio" name="role"> ' + label + '</label>'; }).join('');
       return '<div class="formfield"><label>' + f.label + star + '</label><div class="radiorow" style="flex-direction:column;gap:8px;">' + roleOpts + '</div></div>';
     }
     if (f.type === 'file'){
@@ -704,7 +767,43 @@ function refreshBatchUI(){
 }
 
 function aiCompleteStage(batchKey, stageLabel){
-  showToast('<b>AI is completing ' + stageLabel + '.</b> This one stage now runs automatically — everything else in ' + BATCH_SETTINGS[batchKey].label + ' stays manual.');
+  var b = CUSTOM_BATCHES[batchKey];
+  if (!b){
+    showToast('<b>AI is completing ' + stageLabel + '.</b> This one stage now runs automatically — everything else in ' + BATCH_SETTINGS[batchKey].label + ' stays manual.');
+    return;
+  }
+  var all = [];
+  b.roles.forEach(function(r){ all = all.concat(r.applicants); });
+
+  if (b.stage === 'open'){
+    var pending = all.filter(function(a){ return a.status === 'pending'; });
+    pending.forEach(function(a, i){
+      a.status = (i % 3 === 2) ? 'rejected' : 'shortlisted';
+      a.scanned = true;
+    });
+    showToast('<b>AI screened ' + pending.length + ' pending application' + (pending.length === 1 ? '' : 's') + '.</b> Everything else in ' + b.name + ' stays manual.');
+  } else if (b.stage === 'interviewing'){
+    var toComplete = all.filter(function(a){ return a.status === 'shortlisted' && a.interviewStatus !== 'completed'; });
+    toComplete.forEach(function(a){ a.interviewStatus = 'completed'; if (!a.interviewSlot) a.interviewSlot = 'AI-conducted'; });
+    showToast('<b>AI conducted the remaining interviews.</b> ' + toComplete.length + ' candidate' + (toComplete.length === 1 ? '' : 's') + ' marked interviewed.');
+  } else if (b.stage === 'final'){
+    /* AI never decides hire/reject here — same boundary as an AI-enabled batch,
+       where AI scores and ranks, then a human makes the actual call from the
+       candidate's profile (Reject / Schedule another round / Select for offer). */
+    var scoredCount = 0;
+    b.roles.forEach(function(r){
+      var pool = r.applicants.filter(function(a){ return a.status === 'shortlisted'; });
+      pool.forEach(function(a){ if (typeof a.aiScore !== 'number'){ a.aiScore = pseudoScore(a); scoredCount++; } a.aiTopPick = false; });
+      pool.sort(function(x, y){ return y.aiScore - x.aiScore; });
+      pool.slice(0, r.positions).forEach(function(a){ a.aiTopPick = true; });
+    });
+    stageListExpanded = {};
+    b.roles.forEach(function(r){ stageListExpanded['final-' + r.key] = true; });
+    showToast('<b>AI scored and ranked every shortlisted candidate.</b> Top picks are flagged per role, up to each role\'s target headcount — the hire decision is still yours, from each candidate\'s profile.');
+  }
+
+  if (currentCustomRoleKey) renderCustomRoleRows();
+  goBatchCustom(batchKey);
 }
 
 /* ---------- interview question editor (per role, per batch) ---------- */
@@ -783,7 +882,9 @@ var FIRST_NAMES = ['Ayesha','Bilal','Sara','Hamza','Zainab','Ali','Mahnoor','Usm
 var LAST_NAMES = ['Khan','Ahmed','Raza','Malik','Hussain','Iqbal','Sheikh','Butt','Farooq','Chaudhry','Abbasi','Rehman','Qureshi','Baig','Siddiqui','Awan','Tariq','Yousaf','Zafar','Aslam'];
 var CITIES = ['Karachi','Lahore','Islamabad','Rawalpindi','Faisalabad','Multan','Peshawar','Quetta','Sialkot','Hyderabad'];
 
-var CUSTOM_BATCH = null;
+var CUSTOM_BATCHES = {};
+var currentCustomBatchKey = null;
+var customBatchCounter = 0;
 var currentCustomRoleKey = null;
 var currentCustomProfileId = null;
 
@@ -797,6 +898,7 @@ var CUSTOM_ROW_PILL = {
   shortlisted: '<span class="status-pill status-pill--active">Shortlisted</span>',
   rejected: '<span class="status-pill status-pill--probation">Rejected</span>'
 };
+var STAGE_LABELS = { open:'Applications Open', interviewing:'Interviewing', final:'Final Review', closed:'Closed' };
 
 function generateApplicantName(seed){
   var f = FIRST_NAMES[seed % FIRST_NAMES.length];
@@ -902,6 +1004,10 @@ function publishBatch(){
         name: name,
         city: city,
         status: 'pending',
+        rating: 0,
+        interviewStatus: null,
+        interviewSlot: null,
+        finalOutcome: null,
         resume: name.split(' ')[0] + ' applied for ' + r.label + '. Résumé and CV are on file — open this profile to read it before deciding.',
         cv: buildApplicantCvData(name, r.label, seed),
         scanned: false,
@@ -911,58 +1017,84 @@ function publishBatch(){
     }
   });
 
-  CUSTOM_BATCH = { key:'custom', name: batchName, roles: roles };
-  BATCH_SETTINGS.custom = { label: batchName, aiEnabled: false };
-  BATCH_ROLES.custom = roles.map(function(r){
+  customBatchCounter++;
+  var key = 'custom' + customBatchCounter;
+  CUSTOM_BATCHES[key] = { key: key, name: batchName, roles: roles, stage: 'open' };
+  currentCustomBatchKey = key;
+  BATCH_SETTINGS[key] = { label: batchName, aiEnabled: false };
+  BATCH_ROLES[key] = roles.map(function(r){
     return { key: r.key, label: r.label, questions: ['(no interview questions set yet — this batch is running manually)'] };
   });
+  FORMS[key] = FORMS.draft;
+  FORMS.draft = freshForm();
 
-  addCustomBatchCard();
-  goBatchCustom();
+  renderCustomBatchCard(key);
+  goBatchCustom(key);
   refreshBatchUI();
   showToast('<b>' + batchName + ' published.</b> ' + TOTAL_APPLICANTS + ' applicants generated across ' + roles.length + ' role' + (roles.length > 1 ? 's' : '') + ' — running in manual mode so you can screen them yourself. Turn Preplify Intelligence on for this batch any time from Settings.');
 }
 
-function addCustomBatchCard(){
+function goSettingsForCurrentCustomBatch(){ goSettings(currentCustomBatchKey); }
+function goFormBuilderForCurrentCustomBatch(){ goFormBuilder(currentCustomBatchKey); }
+
+function renderCustomBatchCard(key){
+  var b = CUSTOM_BATCHES[key];
   var grid = document.querySelector('.batchgrid');
   var createCard = grid.querySelector('.batchcard-create');
-  var existing = document.getElementById('customBatchCard');
-  if (existing) existing.remove();
+  var card = document.getElementById('customBatchCard-' + key);
+  var isNew = !card;
+  if (isNew){
+    card = document.createElement('div');
+    card.className = 'batchcard';
+    card.id = 'customBatchCard-' + key;
+    card.onclick = function(){ goBatchCustom(key); };
+  }
 
-  var totalApplied = CUSTOM_BATCH.roles.reduce(function(s, r){ return s + r.applicants.length; }, 0);
-  var totalPositions = CUSTOM_BATCH.roles.reduce(function(s, r){ return s + r.positions; }, 0);
-  var chips = CUSTOM_BATCH.roles.map(function(r){ return '<span class="rolechip">' + r.label + ' <b>' + r.positions + '</b></span>'; }).join('');
+  var totalApplied = b.roles.reduce(function(s, r){ return s + r.applicants.length; }, 0);
+  var totalPositions = b.roles.reduce(function(s, r){ return s + r.positions; }, 0);
+  var chips = b.roles.map(function(r){ return '<span class="rolechip">' + r.label + ' <b>' + r.positions + '</b></span>'; }).join('');
+  var stageNum = { open:1, interviewing:2, final:3, closed:4 }[b.stage];
+  var pillClass = b.stage === 'closed' ? 'status-pill--active' : 'status-pill--brand';
+  var pct = b.stage === 'closed' ? 100 : Math.min(95, 8 + stageNum * 22);
+  var meta = b.stage === 'open' ? 'PUBLISHED BY YOU · APPLICATIONS OPEN' : 'PUBLISHED BY YOU · ' + STAGE_LABELS[b.stage].toUpperCase();
 
-  var card = document.createElement('div');
-  card.className = 'batchcard';
-  card.id = 'customBatchCard';
-  card.onclick = goBatchCustom;
   card.innerHTML =
     '<div class="batchcard-top">' +
-      '<div><div class="bc-name">' + CUSTOM_BATCH.name + '</div><div class="bc-meta">JUST PUBLISHED · APPLICATIONS OPEN</div></div>' +
+      '<div><div class="bc-name">' + b.name + '</div><div class="bc-meta">' + meta + '</div></div>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">' +
-        '<span class="status-pill status-pill--brand">Stage 1 — Applications Open</span>' +
-        '<span class="manual-chip" data-batch="custom">🤝 Manual</span>' +
+        '<span class="status-pill ' + pillClass + '">Stage ' + stageNum + ' — ' + STAGE_LABELS[b.stage] + '</span>' +
+        '<span class="manual-chip" data-batch="' + key + '">🤝 Manual</span>' +
       '</div>' +
     '</div>' +
     '<div class="rolechips">' + chips + '</div>' +
-    '<div class="bc-progress"><div class="bc-progress-fill" style="width:8%;"></div></div>' +
+    '<div class="bc-progress"><div class="bc-progress-fill" style="width:' + pct + '%;' + (b.stage === 'closed' ? 'background:linear-gradient(90deg,var(--success-fg),var(--success-fg));' : '') + '"></div></div>' +
     '<div class="bc-foot"><span class="mono">' + totalApplied + '</span> applications so far · target <span class="mono">' + totalPositions + '</span> hires</div>';
-  grid.insertBefore(card, createCard);
+
+  if (isNew) grid.insertBefore(card, createCard);
+  refreshBatchUI();
 }
 
-function goBatchCustom(){
-  if (!CUSTOM_BATCH) return;
-  var b = CUSTOM_BATCH;
+function renderCustomTimeline(b){
+  var steps = ['open', 'interviewing', 'final', 'closed'];
+  var labels = ['Applications<br>Open', 'Interviewing', 'Final Review', 'Closed'];
+  var curIdx = steps.indexOf(b.stage);
+  var html = '';
+  steps.forEach(function(s, i){
+    var cls = i < curIdx ? 'tl-step done' : (i === curIdx ? 'tl-step active' : 'tl-step');
+    var dot = i < curIdx ? '✓' : (i + 1);
+    var date = i < curIdx ? 'Done' : (i === curIdx ? 'In progress' : 'Not yet');
+    html += '<div class="' + cls + '"><div class="tl-dot">' + dot + '</div><div class="tl-label">' + labels[i] + '</div><div class="tl-date">' + date + '</div></div>';
+    if (i < steps.length - 1) html += '<div class="tl-line' + (i < curIdx ? ' done' : '') + '"></div>';
+  });
+  return html;
+}
+
+function goBatchCustom(key){
+  if (key) currentCustomBatchKey = key;
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  if (!b) return;
   document.getElementById('customBatchCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span><span class="current">' + b.name + '</span>';
-  document.getElementById('customBatchTimeline').innerHTML =
-    '<div class="tl-step active"><div class="tl-dot">1</div><div class="tl-label">Applications<br>Open</div><div class="tl-date">Started today</div></div>' +
-    '<div class="tl-line"></div>' +
-    '<div class="tl-step"><div class="tl-dot">2</div><div class="tl-label">Interviewing</div><div class="tl-date">Not yet</div></div>' +
-    '<div class="tl-line"></div>' +
-    '<div class="tl-step"><div class="tl-dot">3</div><div class="tl-label">Final Review</div><div class="tl-date">Not yet</div></div>' +
-    '<div class="tl-line"></div>' +
-    '<div class="tl-step"><div class="tl-dot">4</div><div class="tl-label">Closed</div><div class="tl-date">Not yet</div></div>';
+  document.getElementById('customBatchTimeline').innerHTML = renderCustomTimeline(b);
 
   var totalApplied = b.roles.reduce(function(s, r){ return s + r.applicants.length; }, 0);
   document.getElementById('customBatchInfo').innerHTML =
@@ -989,8 +1121,191 @@ function goBatchCustom(){
   buildBtn.disabled = false;
   buildBtn.textContent = (doneCount === allApplicants.length) ? '✓ All profiles built' : '🗂 Build all profiles →';
 
-  show('screen-batch-custom', b.name, 'Stage 1 — Applications Open · running manually · ' + totalApplied + ' applicants', 'nav-hiring');
+  renderCustomStagePanel(b);
+
+  show('screen-batch-custom', b.name, 'Stage ' + ({open:1,interviewing:2,final:3,closed:4}[b.stage]) + ' — ' + STAGE_LABELS[b.stage] + ' · running manually · ' + totalApplied + ' applicants', 'nav-hiring');
   syncCrumb('screen-batch-custom');
+}
+
+/* ---------- stage-specific panel: advance a manual batch through its lifecycle ---------- */
+
+var INTERVIEW_SLOT_OPTIONS = ['Tomorrow 10:00 AM', 'Tomorrow 2:00 PM', 'Wed 11:00 AM', 'Wed 3:00 PM', 'Thu 10:00 AM'];
+
+function stageCtaHtml(b, label, desc){
+  if (BATCH_SETTINGS[b.key].aiEnabled) return '';
+  return '<div class="stage-cta show">' +
+    '<div><div class="t">🤖 ' + label + '</div><div class="s">' + desc + '</div></div>' +
+    '<button class="btn btn-primary" onclick="aiCompleteStage(\'' + b.key + '\',\'' + STAGE_LABELS[b.stage].toLowerCase() + '\')">Let AI complete this stage →</button>' +
+  '</div>';
+}
+
+var stageListExpanded = {};
+function toggleStageList(key){
+  stageListExpanded[key] = !stageListExpanded[key];
+  renderCustomStagePanel(CUSTOM_BATCHES[currentCustomBatchKey]);
+}
+
+function pseudoScore(a){
+  var str = a.id;
+  var hash = 0;
+  for (var i = 0; i < str.length; i++){ hash = (hash * 31 + str.charCodeAt(i)) % 1000; }
+  var base = 55 + (hash % 40);
+  if (a.rating) base = Math.min(99, base + a.rating * 3);
+  return base;
+}
+
+function renderCustomStagePanel(b){
+  var panel = document.getElementById('customStagePanel');
+  var all = [];
+  b.roles.forEach(function(r){ all = all.concat(r.applicants); });
+
+  if (b.stage === 'open'){
+    var shortlistedCount = all.filter(function(a){ return a.status === 'shortlisted'; }).length;
+    panel.innerHTML =
+      stageCtaHtml(b, 'Let AI screen these applications', 'Scores every applicant against each role\'s job description — just for this stage.') +
+      '<div class="stage-advance-card">' +
+        '<div><div class="t">Ready to move forward?</div><div class="s">' + shortlistedCount + ' candidate' + (shortlistedCount === 1 ? '' : 's') + ' shortlisted so far. Closing applications moves this batch into Interviewing.</div></div>' +
+        '<button class="btn btn-primary" onclick="advanceCustomBatchStage(\'interviewing\')">Close applications & move to Interviewing →</button>' +
+      '</div>';
+    return;
+  }
+
+  if (b.stage === 'interviewing'){
+    var shortlisted = all.filter(function(a){ return a.status === 'shortlisted'; });
+    var toSchedule = shortlisted.filter(function(a){ return !a.interviewStatus; }).length;
+    var scheduled = shortlisted.filter(function(a){ return a.interviewStatus === 'scheduled'; }).length;
+    var completed = shortlisted.filter(function(a){ return a.interviewStatus === 'completed'; }).length;
+    var allDone = shortlisted.length > 0 && completed === shortlisted.length;
+    var expanded = !!stageListExpanded.interviewing;
+
+    var rows = shortlisted.map(function(a){
+      var roleLabel = b.roles.filter(function(r){ return r.applicants.indexOf(a) > -1; })[0].label;
+      var body;
+      if (a.interviewStatus === 'completed'){
+        body = '<div class="mono" style="font-size:12px;color:var(--success-fg);margin-top:8px;">✓ Interview completed' + (a.interviewSlot ? ' — ' + a.interviewSlot : '') + '</div>';
+      } else if (a.interviewStatus === 'scheduled'){
+        body = '<div class="mono" style="font-size:12px;color:var(--ink-soft);margin-top:8px;">Scheduled: ' + a.interviewSlot + '</div><div style="margin-top:8px;"><button class="btn btn-line" onclick="completeCustomInterview(\'' + a.id + '\')">Mark interview complete →</button></div>';
+      } else {
+        body = '<div class="interview-slots">' + INTERVIEW_SLOT_OPTIONS.map(function(slot){
+          return '<button onclick="scheduleCustomInterview(\'' + a.id + '\',\'' + slot + '\')">' + slot + '</button>';
+        }).join('') + '</div>';
+      }
+      return '<div class="interview-row">' +
+        '<div class="interview-row-head"><div><div class="interview-row-name">' + a.name + '</div><div class="interview-row-role">' + roleLabel + '</div></div><button class="viewlink" onclick="openCustomProfile(\'' + a.id + '\')">View profile →</button></div>' +
+        body +
+      '</div>';
+    }).join('') || '<p style="font-size:13px;color:var(--ink-faint);margin:0;">No shortlisted candidates yet — go back and review applicants first.</p>';
+
+    panel.innerHTML =
+      stageCtaHtml(b, 'Let AI conduct the remaining interviews', 'Marks every scheduled or unscheduled shortlisted candidate as interviewed — just for this stage.') +
+      '<div class="stage-advance-card">' +
+        '<div><div class="t">Ready for Final Review?</div><div class="s">' + (allDone ? 'All interviews are marked complete.' : 'You can move forward before every interview is marked complete if you need to.') + '</div></div>' +
+        '<button class="btn btn-primary" onclick="advanceCustomBatchStage(\'final\')">Move to Final Review →</button>' +
+      '</div>' +
+      '<div class="hcm-card panel">' +
+        '<div class="panel-head-row"><h3>Interview scheduling</h3><button class="btn btn-line" onclick="toggleStageList(\'interviewing\')">' + (expanded ? '▴ Hide list' : '▾ Show list') + ' (' + shortlisted.length + ' candidate' + (shortlisted.length === 1 ? '' : 's') + ')</button></div>' +
+        '<div class="mono" style="font-size:12px;color:var(--ink-soft);margin-bottom:' + (expanded ? '14px' : '0') + ';">' + toSchedule + ' to schedule · ' + scheduled + ' scheduled · ' + completed + ' completed</div>' +
+        (expanded ? rows : '') +
+      '</div>';
+    return;
+  }
+
+  if (b.stage === 'final'){
+    var topHtml =
+      stageCtaHtml(b, 'Let AI shortlist the top candidates', 'Scores every shortlisted candidate and flags the top pick(s) per role for your review — AI never decides the hire itself.') +
+      '<div class="stage-advance-card">' +
+        '<div><div class="t">Done deciding?</div><div class="s">Closing this batch locks in today\'s hires and moves everyone else to the CV Pool.</div></div>' +
+        '<button class="btn btn-primary" onclick="advanceCustomBatchStage(\'closed\')">Close batch →</button>' +
+      '</div>';
+
+    var roleHtml = '';
+    b.roles.forEach(function(r){
+      var pool = r.applicants.filter(function(a){ return a.status === 'shortlisted'; });
+      var hired = pool.filter(function(a){ return a.finalOutcome === 'hired'; });
+      var listKey = 'final-' + r.key;
+      var expanded = !!stageListExpanded[listKey];
+      roleHtml += '<div class="hcm-card panel"><div class="panel-head-row"><h3>' + r.label + ' <span style="font-weight:400;color:var(--ink-faint);font-size:12px;text-transform:none;letter-spacing:0;">— ' + hired.length + ' / ' + r.positions + ' positions filled</span></h3>' +
+        (pool.length ? '<button class="btn btn-line" onclick="toggleStageList(\'' + listKey + '\')">' + (expanded ? '▴ Hide' : '▾ Show') + ' (' + pool.length + ')</button>' : '') +
+      '</div>';
+      if (!pool.length){
+        roleHtml += '<p style="font-size:13px;color:var(--ink-faint);margin:0;">No shortlisted candidates for this role.</p>';
+      } else if (expanded){
+        pool.sort(function(x, y){ return (y.aiScore || 0) - (x.aiScore || 0); });
+        roleHtml += pool.map(function(a){
+          var stars = renderRatingStars(a.rating, false);
+          var scoreTag = (typeof a.aiScore === 'number') ? '<span class="mono" style="font-size:11.5px;color:var(--brand-600);margin-left:8px;">AI score ' + a.aiScore + '</span>' : '';
+          var pickTag = a.aiTopPick ? '<span class="cv-badge" style="margin-left:6px;">AI recommended</span>' : '';
+          var decision;
+          if (a.finalOutcome === 'hired') decision = '<span class="status-pill status-pill--active">Selected for offer</span>';
+          else if (a.finalOutcome === 'rejected') decision = '<span class="status-pill status-pill--probation">Not selected</span>';
+          else decision = '<span class="mono" style="font-size:11.5px;color:var(--ink-faint);">Awaiting your decision</span>';
+          return '<div class="interview-row"><div class="interview-row-head">' +
+            '<div><div class="interview-row-name">' + a.name + scoreTag + pickTag + '</div><div class="rating-stars small">' + stars + '</div></div>' +
+            '<div style="display:flex;align-items:center;gap:10px;">' + decision + '<button class="viewlink" onclick="openCustomProfile(\'' + a.id + '\')">View profile →</button></div>' +
+          '</div></div>';
+        }).join('');
+      }
+      roleHtml += '</div>';
+    });
+
+    panel.innerHTML = topHtml + roleHtml;
+    return;
+  }
+
+  if (b.stage === 'closed'){
+    var closedHtml = '<div class="hcm-card panel"><h3>Results</h3>';
+    b.roles.forEach(function(r){
+      var hired = r.applicants.filter(function(a){ return a.finalOutcome === 'hired'; });
+      closedHtml += '<div class="results-role-card"><div class="results-role-head"><span class="rc-name">' + r.label + '</span><span class="mono" style="color:var(--success-fg);font-weight:700;">' + hired.length + ' / ' + r.positions + ' hired</span></div>' +
+        '<div class="results-names">' + (hired.length ? hired.map(function(a){ return a.name; }).join(' · ') : 'No hires from this role.') + '</div></div>';
+    });
+    closedHtml += '</div><div class="callout-note-box">Every non-hired applicant from this batch stays in the <button class="viewlink" onclick="goCVPool()">CV Pool →</button>, not deleted.</div>';
+    panel.innerHTML = closedHtml;
+    return;
+  }
+}
+
+function advanceCustomBatchStage(newStage){
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  b.stage = newStage;
+  renderCustomBatchCard(b.key);
+  goBatchCustom(b.key);
+  showToast('<b>' + b.name + ' moved to ' + STAGE_LABELS[newStage] + '.</b>');
+}
+
+function scheduleCustomInterview(id, slot){
+  var found = findCustomApplicant(id);
+  found.applicant.interviewStatus = 'scheduled';
+  found.applicant.interviewSlot = slot;
+  renderCustomStagePanel(CUSTOM_BATCHES[currentCustomBatchKey]);
+}
+function completeCustomInterview(id){
+  var found = findCustomApplicant(id);
+  found.applicant.interviewStatus = 'completed';
+  renderCustomStagePanel(CUSTOM_BATCHES[currentCustomBatchKey]);
+}
+function customFinalDecision(id, outcome){
+  var found = findCustomApplicant(id);
+  found.applicant.finalOutcome = outcome;
+  renderCustomStagePanel(CUSTOM_BATCHES[currentCustomBatchKey]);
+}
+
+/* ---------- manual 1–5 star rating ---------- */
+
+function renderRatingStars(rating, interactive){
+  var stars = '';
+  for (var i = 1; i <= 5; i++){
+    var filled = i <= rating ? ' filled' : '';
+    stars += interactive
+      ? '<button class="' + filled.trim() + '" onclick="setCustomRating(' + i + ')">★</button>'
+      : '<span class="' + filled.trim() + '" style="pointer-events:none;">★</span>';
+  }
+  return stars;
+}
+function setCustomRating(n){
+  var found = findCustomApplicant(currentCustomProfileId);
+  found.applicant.rating = (found.applicant.rating === n) ? 0 : n;
+  document.getElementById('customProfileStars').innerHTML = renderRatingStars(found.applicant.rating, true);
 }
 
 /* ---------- bulk "Build all profiles" — treats CV scanning as its own completable stage ---------- */
@@ -1004,9 +1319,10 @@ function updateProfileBuildProgress(done, total){
 }
 
 function buildAllProfiles(){
-  if (!CUSTOM_BATCH) return;
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  if (!b) return;
   var all = [];
-  CUSTOM_BATCH.roles.forEach(function(r){ all = all.concat(r.applicants); });
+  b.roles.forEach(function(r){ all = all.concat(r.applicants); });
   var total = all.length;
   var alreadyDone = all.filter(function(a){ return a.scanned; }).length;
   if (alreadyDone === total){
@@ -1037,33 +1353,38 @@ function buildAllProfiles(){
         var found = findCustomApplicant(currentCustomProfileId);
         if (found) renderCvProfile(found.applicant);
       }
-      showToast('<b>' + total + ' candidate profiles built.</b> Every applicant in ' + CUSTOM_BATCH.name + ' now has a standard profile — ready for you to review and shortlist.');
+      showToast('<b>' + total + ' candidate profiles built.</b> Every applicant in ' + b.name + ' now has a standard profile — ready for you to review and shortlist.');
     }
   }, 150);
 }
 
 function goCustomRoleApplicants(roleKey){
   currentCustomRoleKey = roleKey;
-  var role = CUSTOM_BATCH.roles.filter(function(r){ return r.key === roleKey; })[0];
-  document.getElementById('customRoleCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span><button onclick="goBatchCustom()">' + CUSTOM_BATCH.name + '</button><span class="sep">/</span><span class="current">' + role.label + '</span>';
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  var role = b.roles.filter(function(r){ return r.key === roleKey; })[0];
+  document.getElementById('customRoleCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span><button onclick="goBatchCustom()">' + b.name + '</button><span class="sep">/</span><span class="current">' + role.label + '</span>';
   document.getElementById('customRoleCount').textContent = role.applicants.length + ' applicants for ' + role.label + ' — click any of them to review manually';
   renderCustomRoleRows();
-  show('screen-batch-custom-applicants', role.label + ' — Applicants', CUSTOM_BATCH.name + ' · manual review', 'nav-hiring');
+  show('screen-batch-custom-applicants', role.label + ' — Applicants', b.name + ' · manual review', 'nav-hiring');
   syncCrumb('screen-batch-custom-applicants');
 }
 
 function renderCustomRoleRows(){
-  var role = CUSTOM_BATCH.roles.filter(function(r){ return r.key === currentCustomRoleKey; })[0];
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  var role = b.roles.filter(function(r){ return r.key === currentCustomRoleKey; })[0];
   document.getElementById('customRoleRows').innerHTML = role.applicants.map(function(a){
     var clip = a.hasFullCv ? '<span class="cv-clip" title="Full mock CV on file">📎</span>' : '';
     var badge = a.scanned ? '<span class="cv-badge">Profile built</span>' : '';
-    return '<tr class="rowhover" onclick="openCustomProfile(\'' + a.id + '\')"><td class="namecell">' + clip + a.name + '</td><td class="rolecell">' + a.city + '</td><td>' + CUSTOM_ROW_PILL[a.status] + badge + '</td><td><button class="viewlink">View →</button></td></tr>';
+    var stars = a.rating ? '<span class="rating-stars small">' + renderRatingStars(a.rating, false) + '</span>' : '<span class="rating-mini">—</span>';
+    return '<tr class="rowhover" onclick="openCustomProfile(\'' + a.id + '\')"><td class="namecell">' + clip + a.name + '</td><td class="rolecell">' + a.city + '</td><td>' + stars + '</td><td>' + CUSTOM_ROW_PILL[a.status] + badge + '</td><td><button class="viewlink">View →</button></td></tr>';
   }).join('');
 }
 
 function findCustomApplicant(id){
-  for (var i = 0; i < CUSTOM_BATCH.roles.length; i++){
-    var role = CUSTOM_BATCH.roles[i];
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
+  if (!b) return null;
+  for (var i = 0; i < b.roles.length; i++){
+    var role = b.roles[i];
     for (var j = 0; j < role.applicants.length; j++){
       if (role.applicants[j].id === id) return { applicant: role.applicants[j], role: role };
     }
@@ -1073,15 +1394,25 @@ function findCustomApplicant(id){
 
 function openCustomProfile(id){
   currentCustomProfileId = id;
+  var b = CUSTOM_BATCHES[currentCustomBatchKey];
   var found = findCustomApplicant(id);
   var a = found.applicant, role = found.role;
   document.getElementById('customProfileToast').classList.remove('show');
-  document.getElementById('customProfileCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span><button onclick="goBatchCustom()">' + CUSTOM_BATCH.name + '</button><span class="sep">/</span><button onclick="goCustomRoleApplicants(\'' + role.key + '\')">' + role.label + '</button><span class="sep">/</span><span class="current">' + a.name + '</span>';
+  document.getElementById('customProfileCrumb').innerHTML = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span><button onclick="goBatchCustom()">' + b.name + '</button><span class="sep">/</span><button onclick="goCustomRoleApplicants(\'' + role.key + '\')">' + role.label + '</button><span class="sep">/</span><span class="current">' + a.name + '</span>';
   document.getElementById('customProfileInitials').textContent = a.name.split(' ').map(function(w){ return w[0]; }).join('').slice(0,2).toUpperCase();
   document.getElementById('customProfileName').textContent = a.name;
-  document.getElementById('customProfileRoleLine').textContent = role.label + ' applicant · ' + a.city + ' · ' + CUSTOM_BATCH.name;
+  document.getElementById('customProfileRoleLine').textContent = role.label + ' applicant · ' + a.city + ' · ' + b.name;
   document.getElementById('customProfileStatusPill').outerHTML = CUSTOM_STATUS_PILL[a.status];
   document.getElementById('customProfileResume').textContent = a.resume;
+  document.getElementById('customProfileStars').innerHTML = renderRatingStars(a.rating, true);
+
+  var scoreBox = document.getElementById('customProfileScoreBox');
+  if (typeof a.aiScore === 'number'){
+    scoreBox.style.display = '';
+    document.getElementById('customProfileScoreVal').textContent = a.aiScore;
+  } else {
+    scoreBox.style.display = 'none';
+  }
 
   var viewCvBtn = document.getElementById('viewOriginalCvBtn');
   var cvBox = document.getElementById('originalCvBox');
@@ -1097,9 +1428,22 @@ function openCustomProfile(id){
 
   renderCvProfile(a);
 
-  var emailBtn = '<button class="btn btn-line" onclick="alert(\'Would open an email composer addressed to ' + a.name + '.\')">✉ Email candidate</button>';
+  var emailBtn = BATCH_SETTINGS[b.key].aiEnabled ? '' : '<button class="btn btn-line" onclick="alert(\'Would open an email composer addressed to ' + a.name + '.\')">✉ Email candidate</button>';
   var actions;
-  if (a.status === 'pending'){
+  if (b.stage === 'final' && a.status === 'shortlisted'){
+    /* Final Review mirrors how AI-enabled batches already work: AI has scored and
+       shortlisted the candidate, a human makes the actual call from their profile. */
+    if (a.finalOutcome === 'hired'){
+      actions = emailBtn + '<span class="mono" style="align-self:center;color:var(--success-fg);font-size:12px;">✓ Selected for offer</span>';
+    } else if (a.finalOutcome === 'rejected'){
+      actions = emailBtn + '<button class="btn btn-primary" onclick="customFinalDecision(\'' + a.id + '\',\'hired\'); openCustomProfile(\'' + a.id + '\');">Select for offer anyway →</button><span class="mono" style="align-self:center;color:var(--ink-faint);font-size:12px;">Not selected</span>';
+    } else {
+      actions = emailBtn +
+        '<button class="btn btn-danger-ghost" onclick="customFinalDecision(\'' + a.id + '\',\'rejected\'); openCustomProfile(\'' + a.id + '\');">Reject</button>' +
+        '<button class="btn btn-line" onclick="alert(\'Would open a scheduling dialog for a follow-up human interview.\')">Schedule another round</button>' +
+        '<button class="btn btn-primary" onclick="customFinalDecision(\'' + a.id + '\',\'hired\'); openCustomProfile(\'' + a.id + '\');">Select for offer →</button>';
+    }
+  } else if (a.status === 'pending'){
     actions = emailBtn + '<button class="btn btn-danger-ghost" onclick="customProfileAction(\'rejected\')">Reject</button><button class="btn btn-primary" onclick="customProfileAction(\'shortlisted\')">Shortlist →</button>';
   } else if (a.status === 'shortlisted'){
     actions = emailBtn + '<button class="btn btn-danger-ghost" onclick="customProfileAction(\'rejected\')">Move to rejected</button><span class="mono" style="align-self:center;color:var(--ink-faint);font-size:12px;">Shortlisted — ready for the next stage</span>';
@@ -1108,7 +1452,7 @@ function openCustomProfile(id){
   }
   document.getElementById('customProfileActions').innerHTML = actions;
 
-  show('screen-batch-custom-profile', a.name, role.label + ' · Applicant, ' + CUSTOM_BATCH.name, 'nav-hiring');
+  show('screen-batch-custom-profile', a.name, role.label + ' · Applicant, ' + b.name, 'nav-hiring');
   syncCrumb('screen-batch-custom-profile');
 }
 
@@ -1196,8 +1540,20 @@ var PLATFORMS = [
     desc:'Lower priority for now — limited reach in our current markets.' }
 ];
 
-function goConnectPlatforms(){
+var connectionsReturnTo = null;
+function goConnectPlatforms(returnTo){
+  if (typeof returnTo !== 'undefined') connectionsReturnTo = returnTo;
   renderPlatforms();
+
+  var crumb = '<button onclick="goBatches()">Hiring</button><span class="sep">/</span>';
+  if (connectionsReturnTo === 'draft'){
+    crumb += '<button onclick="goCreateBatch()">Create batch</button><span class="sep">/</span>';
+  } else if (connectionsReturnTo === 'settings'){
+    crumb += '<button onclick="goSettings()">Settings</button><span class="sep">/</span>';
+  }
+  crumb += '<span class="current">Connections</span>';
+  document.getElementById('connectionsCrumb').innerHTML = crumb;
+
   show('screen-connect-platforms', 'Connections', 'Where "Publish batch" can post automatically — shared across every batch', 'nav-connections');
   syncCrumb('screen-connect-platforms');
 }

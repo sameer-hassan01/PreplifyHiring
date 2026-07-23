@@ -17,7 +17,7 @@
       <div class="lbl">Recruiting</div>
       <button class="navitem hiring-highlight active" id="nav-hiring" onclick="goBatches()">Hiring</button>
       <button class="navitem" id="nav-cvpool" onclick="goCVPool()">CV Pool</button>
-      <button class="navitem" id="nav-connections" onclick="goConnectPlatforms()">Connections</button>
+      <button class="navitem" id="nav-connections" onclick="goConnectPlatforms(null)">Connections</button>
       <button class="navitem" id="nav-settings" onclick="goSettings()">Hiring Settings</button>
     </div>
     <div class="navgroup">
@@ -116,7 +116,7 @@
             <div class="bc-foot"><span class="mono">15/15</span> positions filled</div>
           </div>
 
-          <div class="batchcard batchcard-create" onclick="goCreateBatch()">
+          <div class="batchcard batchcard-create" onclick="startNewBatch()">
             <div class="bc-create-icon">+</div>
             <div class="bc-create-label">Create new hiring batch</div>
             <div class="bc-create-sub">One batch, multiple roles, one shared timeline</div>
@@ -183,7 +183,7 @@
             </div>
           </div>
           <div class="settings-row">
-            <div><div class="st">Where it's posted</div><div class="sd">Job boards post automatically based on what's connected. <button class="viewlink" onclick="goConnectPlatforms()">Manage connections →</button></div></div>
+            <div><div class="st">Where it's posted</div><div class="sd">Job boards post automatically based on what's connected. <button class="viewlink" onclick="goConnectPlatforms('draft')">Manage connections →</button></div></div>
             <div>
               <div class="wp-list" id="wherePostedList"></div>
               <div class="radiorow" style="margin-top:10px;">
@@ -248,7 +248,7 @@ Requirements:
           </div>
           <div class="settings-row">
             <div><div class="st">Application form</div><div class="sd">What candidates fill in, plus any instructions you want them to see first — like Google Forms, but wired straight into screening.</div></div>
-            <button class="btn btn-line" onclick="goFormBuilder()">Customize the application form →</button>
+            <button class="btn btn-line" onclick="goFormBuilder('draft')">Customize the application form →</button>
           </div>
           <div class="settings-row">
             <div><div class="st">Also check the CV Pool first?</div><div class="sd">Before this posts publicly, run these roles against everyone who's applied before.</div></div>
@@ -264,7 +264,10 @@ Requirements:
       <!-- SCREEN: Batch detail — a freshly-published custom batch (data-driven, manual mode by default) -->
       <section class="screen" id="screen-batch-custom">
         <div class="crumbnav" id="customBatchCrumb"></div>
-        <div class="secondary-actions" style="margin-bottom:14px;"><button class="linkbtn" onclick="goSettings('custom')">⚙ Settings for this batch</button></div>
+        <div class="secondary-actions" style="margin-bottom:14px;">
+          <button class="linkbtn" onclick="goSettingsForCurrentCustomBatch()">⚙ Settings for this batch</button>
+          <button class="linkbtn" onclick="goFormBuilderForCurrentCustomBatch()">✎ Edit application form</button>
+        </div>
 
         <div class="timeline" id="customBatchTimeline"></div>
         <div class="infogrid" id="customBatchInfo"></div>
@@ -284,11 +287,9 @@ Requirements:
         <div class="hcm-card panel">
           <h3>Roles in this batch <span style="font-weight:400;color:var(--ink-faint);font-size:12px;text-transform:none;letter-spacing:0;">— click a role to review its applicants</span></h3>
           <div id="customBatchRoles"></div>
-          <div class="stage-cta" data-batch="custom">
-            <div><div class="t">🤖 Let AI screen these applications</div><div class="s">Scores every applicant against each role's job description — just for this stage.</div></div>
-            <button class="btn btn-primary" onclick="aiCompleteStage('custom','application screening')">Let AI complete this stage →</button>
-          </div>
         </div>
+
+        <div id="customStagePanel"></div>
       </section>
 
       <!-- SCREEN: custom batch — one role's applicant list (manual review) -->
@@ -298,7 +299,7 @@ Requirements:
         <div class="hcm-card" style="padding:0;">
           <div class="wrap-x">
           <table class="apptable">
-            <tr><th>Applicant</th><th>City</th><th>Status</th><th></th></tr>
+            <tr><th>Applicant</th><th>City</th><th>Rating</th><th>Status</th><th></th></tr>
             <tbody id="customRoleRows"></tbody>
           </table>
           </div>
@@ -319,7 +320,15 @@ Requirements:
             <div class="initials" id="customProfileInitials"></div>
             <div><h2 id="customProfileName"></h2><div class="role" id="customProfileRoleLine"></div></div>
           </div>
-          <span id="customProfileStatusPill"></span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="scorebox" id="customProfileScoreBox" style="display:none;"><div class="n mono" id="customProfileScoreVal"></div><div class="l">AI score</div></div>
+            <span id="customProfileStatusPill"></span>
+          </div>
+        </div>
+
+        <div class="rating-row">
+          <span class="rating-label">Your rating</span>
+          <span class="rating-stars" id="customProfileStars"></span>
         </div>
 
         <div class="hcm-card panel">
@@ -614,7 +623,7 @@ Requirements:
           <div class="infoitem"><div class="il">Application form</div><div class="iv"><span class="copylink">preplify.app/apply/summer-26 <button class="viewlink" onclick="alert('Copied.')">Copy</button></span></div></div>
         </div>
 
-        <div class="callout-note-box">Applications close in <b>9 days</b>. Posted to LinkedIn, Indeed, Instagram, and the company careers page — candidates apply directly through the public application form.<br><button class="viewlink" onclick="goApplyForm()">Preview the public application form →</button> · <button class="viewlink" onclick="goFormBuilder()">Edit questions →</button></div>
+        <div class="callout-note-box">Applications close in <b>9 days</b>. Posted to LinkedIn, Indeed, Instagram, and the company careers page — candidates apply directly through the public application form.<br><button class="viewlink" onclick="goApplyForm('open26')">Preview the public application form →</button> · <button class="viewlink" onclick="goFormBuilder('open26')">Edit questions →</button></div>
 
         <div class="hcm-card panel">
           <h3>Live scoring, per role <span style="font-weight:400;color:var(--ink-faint);font-size:12px;text-transform:none;letter-spacing:0;">— click a role to see its candidates</span></h3>
@@ -741,7 +750,7 @@ Requirements:
 
       <!-- SCREEN: Application form builder — Google-Forms-style editor -->
       <section class="screen" id="screen-form-builder">
-        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><button onclick="goBatchOpen()">Summer Internship 2026</button><span>/</span><span>Edit application form</span></div>
+        <div class="crumbnav" id="formBuilderCrumb"></div>
 
         <div class="hcm-card" style="padding:24px 26px; max-width:640px;">
           <h3 style="margin-top:0;">Instructions shown to candidates</h3>
@@ -1266,7 +1275,7 @@ Nice to have: Next.js, GraphQL, mentoring junior engineers.</div>
 
       <!-- SCREEN: Connect Platforms — job board connections -->
       <section class="screen" id="screen-connect-platforms">
-        <div class="crumbnav"><button onclick="goBatches()">Hiring</button><span>/</span><span>Connections</span></div>
+        <div class="crumbnav" id="connectionsCrumb"></div>
 
         <div class="mode-banner on" style="margin-top:0;">📡 <b>One post, everywhere it's actually connected.</b> When you click "Publish batch," Preplify posts automatically to every platform below that's connected — nothing copy-pasted by hand, and nothing sent anywhere that isn't turned on.</div>
 
